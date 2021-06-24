@@ -27,6 +27,7 @@
 >Use [this](https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers) tutorial for installation and setup instructions
 
 
+
 # Exercise 1: Running Your First Container
 
 In this exercise, you will launch a fully functional WordPress blog engine using a Linux-based Docker container. You will learn the commands needed to pull the container image and then launch the container using the Docker CLI. Finally, you will observe that by running the container, you don't need to install any of the WordPress dependencies onto your machine; the WordPress engine binaries and all dependencies will be packaged inside of the container.  
@@ -223,6 +224,35 @@ You have successfully completed this exercise. Click **Next** to advance to the 
 
 A Dockerfile is essentially a plain text file with Docker commands in it that are used to create a new image. You can think of it as a configuration file with a set of instructions needed to assemble a new image. In this exercise, you will learn the common commands that go into Dockerfiles by creating custom images based on common technologies like NGINX and ASP .NET Core.  
 
+## Setup 
+First, after the [Prerequisites](#Prerequisites) have been installed, start the Ubuntu Linux distribution using Windows Terminal
+
+![m1image1](./content/m1image1.png)
+
+Next, download the lab files from GitHub
+```bash
+git clone https://github.com/RandyPatterson/levelup-k8s-public.git
+```
+
+Navigate to the the newly created *labs* directory 
+
+```bash
+ cd levelup-k8s-public/labs/; ls
+ ```
+
+```bash
+rpatterson@levelup:~$ git clone https://github.com/RandyPatterson/levelup-k8s-public.git
+    Cloning into 'levelup-k8s-public'...
+    remote: Enumerating objects: 259, done.
+    remote: Counting objects: 100% (259/259), done.
+    remote: Compressing objects: 100% (239/239), done.
+    remote: Total 259 (delta 12), reused 259 (delta 12), pack-reused 0
+    Receiving objects: 100% (259/259), 29.89 MiB | 31.75 MiB/s, done.
+    Resolving deltas: 100% (12/12), done.
+rpatterson@levelup:~$ cd levelup-k8s-public/
+rpatterson@levelup:~/levelup-k8s-public$ ls
+    README.md  labs
+```
 
 
 ## Building and Running NGINX Container
@@ -231,11 +261,17 @@ A Dockerfile is essentially a plain text file with Docker commands in it that ar
 
     The relevant files including static html file **index.html** along with the Dockerfile are available inside the directory **labs/module1/nginx**.  
 
-    ![](content/media/image34.png)
+    ```bash
+    cd labs/module1/nginx
+    ```
+1. Type ```ls``` and press Enter. Notice the available files include "**index.html**" and "**Dockerfile**".
 
-1. Type "**ls**" and press Enter. Notice the available files include "**index.html**" and "**Dockerfile**".
+    ```
+    rpatterson@levelup:~/levelup-k8s-public$ cd labs/module1/nginx
+    rpatterson@levelup:~/levelup-k8s-public/labs/module1/nginx$ ls
 
-    ![](content/media/image35.png)
+    Dockerfile  index.html
+    ```
 
 1. Let's examine the Dockerfile by typing the command "**nano Dockerfile**" and press Enter. 
 
