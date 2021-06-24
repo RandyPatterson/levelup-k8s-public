@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\workshops\\levelup-k8s-public\\labs\\module1\\aspnetcore\\mywebapp\\mywebapp.csproj": {}
+    "C:\\workshops\\levelup-k8s-public\\labs\\module1\\aspnetcore\\mywebapp.csproj": {}
   },
   "projects": {
-    "C:\\workshops\\levelup-k8s-public\\labs\\module1\\aspnetcore\\mywebapp\\mywebapp.csproj": {
+    "C:\\workshops\\levelup-k8s-public\\labs\\module1\\aspnetcore\\mywebapp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\workshops\\levelup-k8s-public\\labs\\module1\\aspnetcore\\mywebapp\\mywebapp.csproj",
+        "projectUniqueName": "C:\\workshops\\levelup-k8s-public\\labs\\module1\\aspnetcore\\mywebapp.csproj",
         "projectName": "mywebapp",
-        "projectPath": "C:\\workshops\\levelup-k8s-public\\labs\\module1\\aspnetcore\\mywebapp\\mywebapp.csproj",
+        "projectPath": "C:\\workshops\\levelup-k8s-public\\labs\\module1\\aspnetcore\\mywebapp.csproj",
         "packagesPath": "C:\\Users\\ranpat\\.nuget\\packages\\",
-        "outputPath": "C:\\workshops\\levelup-k8s-public\\labs\\module1\\aspnetcore\\mywebapp\\obj\\",
+        "outputPath": "C:\\workshops\\levelup-k8s-public\\labs\\module1\\aspnetcore\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -21,15 +21,15 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net5.0"
+          "netcoreapp3.1"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net5.0": {
-            "targetAlias": "net5.0",
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
             "projectReferences": {}
           }
         },
@@ -40,8 +40,8 @@
         }
       },
       "frameworks": {
-        "net5.0": {
-          "targetAlias": "net5.0",
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "imports": [
             "net461",
             "net462",
