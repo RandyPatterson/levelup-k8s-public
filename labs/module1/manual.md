@@ -273,40 +273,44 @@ rpatterson@levelup:~/levelup-k8s-public$ ls
     Dockerfile  index.html
     ```
 
-1. Let's examine the Dockerfile by typing the command "**nano Dockerfile**" and press Enter. 
+1. Let's examine the Dockerfile by typing the command ```code Dockerfile``` and press Enter. This will launch VS Code
 
-    >You can use any other text editor (for example, vi, etc.), but instructions are provided for nano text editor). 
-    
-    >Note:Notice the structure of Dockerfile.
+    >You can use any other text editor however, instructions are provided for Visual Studio Code text editor). 
 
-    ![](content/modimage36.png)  
-1. Move your cursor using the arrow keys to the line starting with **Label author="sampleauthor@contoso.com"** and change the text from that to the following: **LABEL author="YourEmail@Email.com"**. Once you are finished making changes press **CTRL + X** and then press **Y** when asked for confirmation to retain your changes. Finally, you will be asked for file name to write. For that press **Enter** (without changing the name of the file). This will close the nano text editor.  
+    ![m1e3i1](./content/m1e3i1.png)  
 
-    ![](content/media/image28.png)
+1. Move your cursor using the arrow keys to the line starting with **Label author="sampleauthor@contoso.com"** and change the text from that to the following: **LABEL author="YourEmail@Email.com"**. Once you are finished making changes press **CTRL + S** to save your changed.  You can exit VS Code
 
 1. You are now ready to build a new container image based on the Dockerfile you just modified.  
-    Run the command "**docker build -t mynginx .**"
+Run the command 
+    ```bash
+    docker build -t mynginx .
+    ```
+    You output sould look something like this
 
-    ![](content/modimage37.png)  
+    ![modimage37](content/modimage37.png)  
 
-    >Note:Notice how the build command is reading instructions from the Docker file starting from the top and executing them one at a time. The image will download much faster as this is a very small image.
+    >Notice how the build command is reading instructions from the Docker file starting from the top and executing them one at a time. The image will download much faster as this is a very small image.
 
-1. If you want to see the layers of an image, you can do "**docker history mynginx**" and see the one you just built. You can also try running this command on other images you have on your VM too.
+1. If you want to see the layers of an image, you can do ```docker history mynginx``` and see the one you just built. You can also try running this command on other images you have on your VM too.
 
     ![](content/mod1image38_2.PNG)
 
-1. Run the command "**docker images**"  
+1. Run the command ```docker images```
 
-    >Note:Notice the new container image appears with the name **mynginx**. Also notice the presence of parent image **nginx** that was pulled from Docker Hub during the build operation. Take a look at the sizes of different images also. This will become important when you build your own custom images to reduce the size for both security and performance.  
+    >Notice the new container image appears with the name **mynginx**. Also notice the presence of parent image **nginx** that was pulled from Docker Hub during the build operation. Take a look at the sizes of different images also. This will become important when you build your own custom images to reduce the size for both security and performance.  
 
     ![](content/mod1image39_2.PNG)
-1. Finally, create and run a new container based on "**mynginx**" image. Run command "**docker run -d -p 80:80 mynginx**".
+1. Finally, create and run a new container based on "**mynginx**" image. Run command 
+```bash 
+docker run -d -p 8080:80 mynginx
+```
 
-    ![](content/media/image40.png)
+![](content/media/image40.png)
 
-1. To test the node app, go to your **Firefox** browser and go to **localhost**.
+1. To test the node app, go to your browser and navigate to  [localhost:8080](hgttp://localhost:8080).
 
-    ![](content/media/image41.png)
+![m1e3i41](content/m1e3i41.png)
 
 
 # Building and Running ASP.NET Core 3.x Application Inside A Container
