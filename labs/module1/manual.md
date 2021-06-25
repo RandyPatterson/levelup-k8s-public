@@ -185,7 +185,7 @@ In this exercise, you will learn about common Docker commands needed to work wit
     >The "**-f**" switch is used to force the remove operation. It's needed if you are trying to remove a container that is running.
 
 
-# Stopping All Containers
+## Stopping All Containers
 
 1. At times you may want to stop all of the running containers and avoid issuing command to stop one container at a time. Run ```docker stop $(docker ps -aq)``` command to stop all running containers. Basically, you are issuing two commands: First the **docker ps** with relevant switches to capture the list of container IDs and then passing the list of IDs to the **docker stop** command.
 
@@ -303,7 +303,7 @@ Run the command
     ![](content/mod1image39_2.PNG)
 1. Finally, create and run a new container based on "**mynginx**" image. Run command 
 ```bash 
-docker run -d -p 8080:80 mynginx
+docker run -d --name mynginx -p 8080:80 mynginx
 ```
 
 ![](content/media/image40.png)
@@ -334,7 +334,7 @@ sudo apt-get update; \
   sudo apt-get update && \
   sudo apt-get install -y dotnet-sdk-3.1
 ```
-Verify Installation Successful but running 
+Verify Installation successful buy running 
 ```bash
 dotnet --version
 ```
@@ -348,11 +348,11 @@ rpatterson@levelup:~$  dotnet --version
 ## Create ASP.NET Core Image
 Now that .NET Core 3.1 SKD is installed we can create the image & cotnainer.
 
-     ```bash
-     # change to the correct directory 
-     cd ../aspnetcore
-     dotnet build
-     ```
+Change to the correct directory and start the build process
+```bash
+cd ../aspnetcore
+dotnet build
+```
     
 ![](content/mod1image42_2.PNG)   
 
@@ -376,7 +376,7 @@ docker build -t myaspcoreapp:3.1 .
 ![](content/mod1image45_2.PNG)
 
 1. Launch the container running your application using the command  
-```docker run -d -p 8090:80 myaspcoreapp:3.1  ```
+```docker run -d --name myaspcoreapp -p 8090:80 myaspcoreapp:3.1  ```
 
 ![](content/mod1image46_2.PNG)
 
@@ -388,138 +388,106 @@ docker build -t myaspcoreapp:3.1 .
 
 Notice that the container ID listed on the web page is identical to the container ID assigned by Docker
 
-
-### Congratulations!
-
-You have successfully completed this exercise
-
 --- 
 
 # Exercise 4: Interaction with a Running Container
 
 In the previous exercise, you were able to build and run containers based on Dockerfiles. However, there may be situations that warrant interacting with a running container for the purposes of troubleshooting, monitoring etc. You may also want to make changes/updates to a running container and then build a new image based on those changes. In this exercise, you will interact with a running container and then learn to persist your changes as a new image.  
 
-
-[Return to list of exercises](#module-1-table-of-contents) - [Return to list of modules](#modules)    
-
 ## Interaction with a Running Container
 
-1. On the command line run "**docker ps**" to list all the currently running containers on your virtual machine.
+1. On the command line run ```docker ps -a ``` to list all the currently running containers on your virtual machine.
+
+    ```bash 
+    docker ps -a 
+    ```
 
     ![](content/mod1image48_2.PNG)
 
-    >Note:Notice that multiple containers are running. To establish interactive session a with a running container you will need its **CONTAINER ID** or **NAME**. Let's establish an interactive session to a container based on "**mynodejs**" image. Please note that your **CONTAINER ID** or **NAME** will probably be different. And, unless you specified a name, Docker came up with a random adjective and noun and smushed them together to come up with its own clever name.  
+    >Notice that multiple containers are running. To establish interactive session a with a running container you will need its **CONTAINER ID** or **NAME**. Let's establish an interactive session to a container based on "**mynginx**" image. Please note that your **CONTAINER ID**  will be different. And, unless you specified a name using the **--name** parameter, Docker generated a random name  
 
-1. Run a command "**docker exec -it <CONTAINER_ID_OR_NAME> bash**" on your **mynodejs container**. 
+1. Run a command 
+    ```
+    docker exec -it mynginx sh
+    ```
+    to connect to your **NGINX container**. 
 
-    >Note: You can run the command **docker exec -it &lt;CONTAINER_ID_OR_NAME&gt; bash** using either the container ID or name.
+    >You can run the command **docker exec -it &lt;CONTAINER_ID_OR_NAME&gt; bash** using either the container ID or name. 
 
-    >Knowledge: **docker exec** is used to run a command in a running container. The **it** parameter will invoke an interactive bash shell inside the container. 
+    >Did You Know? **docker exec** is used to run a command in a running container. The **it** parameter will invoke an interactive shell inside the container. 
     
-    >Note:Notice that a new interactive session is now establish to a running container. Since "**bash**" is the program that was asked to be executed you now have access to full bash shell inside the container.
+    >Notice that a new interactive session is now establish to a running container. Since "**sh**" is the program that was asked to be executed you now have access to full bash shell inside the container.
 
-    ![](content/mod1image49_2.PNG)
+    ![mod1image49_2](content/mod1image49_2.PNG)
 
-1. You can run a command "**ls**" to view the listing of files and directories. 
-    >Note: Notice it has all the files copied by Dockerfile command in previous section.
+    While connected to the container display the contents of the NGINX default page. 
 
-    ![](content/mod1image50_2.PNG)
-    >Knowledge: For more information regarding running commands inside docker container please visit: [https://docs.docker.com/engine/reference/commandline/exec](https://docs.docker.com/engine/reference/commandline/exec)
+    ```bash
+    cat  /usr/share/nginx/html/index.html
+    ```
+    ![mod1image49_2](content/m1ex4i49_3.png)
 
-
-# Making Changes to a Running Container
-
-While you are interacting and running commands inside a running container, you may also want to make changes/updates to it. Later, you may also create a brand-new image out of these changes. In this task you will make changes to "mynodejs" container image, test them out and finally create a new image (without the need of Dockerfile). 
->Note:Please note that this approach of creating container images is generally used to quickly test various changes, but the best practice to create container images is to use a Dockerfile since it is a declarative file that can be kept in source control repositories.
-
-  First, you will make updates to **server.js** file. You should have an active session already established from previous exercise (if not then please follow the instructions from the previous section to create an active session now).   
-  
-  Before we can edit the **server.js** file we need to install a text editor. To keep the size of container to a minimum, the **nodejs** container image does not have any extra software installed in the container. This is a common theme when building images and is also the recommend practice.  
-
-1. Before installing any software run the command  
-    `apt-get update`  
-    >Warning:Note the dash between "apt" and "-get".
-
-    ![](content/mod1image51_2.PNG)
-
-1. To install "**nano**" run a command  
-    `apt-get install nano`
-
-    ![](content/mod1image52_2.PNG)
-
-1. After "**nano**" is installed successfully, run the command "**nano server.js**" to open "**server.js**" file for editing.
-
-    ![](content/mod1image53_2.PNG)
-
-1. Use the arrow keys to go to the line starting with "**res.Send(...**" and update the text from "**Hello Node.js!!!**" to "**Hello Node.js AGAIN!!!**". 
-    >Note:Your final changes should look like following:
-
-    ![](content/mod1image54_2.PNG)
-
-1. Once you finish making changes press "**CTRL + X**" and then press "**Y**" when asked for confirmation to retain changes. Finally, you will be asked for file name to write. For that press **enter** (without changing the name of the file). This will close the Nano text editor.
-
-1. To save the updates and exit the interactive bash session, run the command "**exit**"
-
-    ![](content/mod1image55_2.PNG)
-
-1. The running container needs to be stopped first and then started again to reflect the changes. Run the command "**docker stop &lt;&lt;CONTAINER ID&gt;&gt;**" to stop the container. Run the command "**docker start &lt;&lt;CONTAINER ID&gt;&gt;**" to start the container.
-
-    ![](content/mod1image56_2.PNG)
-1. Finally, to test the update you have made to the container go to **Firefox** and **localhost:8080**. 
-    >Note:Notice the output "**Hello Node.js AGAIN!!!**". This verifies that changes to the container were persisted.
-
-    ![](content/mod1image57.png)  
+    >For more information regarding running commands inside docker container please visit: [https://docs.docker.com/engine/reference/commandline/exec](https://docs.docker.com/engine/reference/commandline/exec)
 
 
-# Interaction with a Running Container
+1. Making Changes to a Running Container
 
-In the previous task you have made changes to running container. However, these changes are only available to that container and if you were to remove the container, these changes would be lost. One way to address this is by creating a new container image based on running container that has the changes. This way changes will be available as part of a new container image. This is helpful during dev/test phases, where rapid development and testing requires a quick turn-around time. However, this approach is generally not recommended, as it's hard to manage and scale at the production level. Also, if content is the only piece that needs to be changed and shared, then using **volumes** may be another viable option. Volumes are covered in module three.   
+    While you are interacting and running commands inside a running container, you may also want to make changes/updates to it. Later, you may also create a brand-new image out of these changes. In this task you will make changes to **NGINX** container image, test them out and finally create a new image (without the need of Dockerfile). 
 
-1. To create new image run the command "**docker commit &lt;CONTAINER ID&gt; mynodejsv2**". 
-    >Knowledge:The docker commit command is used to create a new image from a container's changes. 
-    
-    >Knowledge:If you don't already have it, you can use "**docker ps**" command to get the list of running containers or "**docker ps -a**" to get list of all the containers that are stopped and capture the CONTAINER ID of the container you have updated in previous section.
-
-    ![](content/mod1image58_2.PNG)
-
-1. Now, view the list of all container images by running the command  
-    `docker images`   
-
-    >Note:Notice the availability of new image with name "mynodejsv2"
-
-    ![](content/mod1image59_2.PNG) 
-
-    >Note:You now have a container image with the changes you made and tested earlier and is ready to be used.
-
-1. To test the new image run a command  
-    `docker run -d -p 8081:8080 mynodejsv2`  
-
-    >Note:This will create a new container based on the image "**mynodejsv2**".
-
-    ![](content/mod1image60.png)  
-
-1. Finally, to test the container, go to **localhost:8081** in **Firefox**. 
-
-    >Note:Notice the text "**Hello Node.js AGAIN!!!**" is returned from the node.js application. This attest that changes were committed properly to new image and hence available to any container created based on the that image.
-
-    ![](content/mod1image61.png)   
-
-### Congratulations!
-
-You have successfully completed this exercise. Click **Next** to advance to the next exercise.
+    >Please note that this approach of creating container images is generally used to quickly test various changes, but the best practice to create container images is to use a Dockerfile since it is a declarative file that can be kept in source control repositories.
 
 
+    First, replace the **"Hello NGINX!!!"** string with **"Container Updated"** using the built-in *vi* editor 
 
-# Exercise 5: Tagging
+    ```bash
+    vi /usr/share/nginx/html/index.html
+    ```
+    Navigate the the string then press **I** to enter *Insert Mode* then replace the text. Once updated exit **vi** by pressing the **ESC** key then typing ```:wq```
+
+    ![m1ex4i50](content/m1ex4i50.png)
+
+    type ```exit``` to exit the NGINX container and return back to your PC. 
+
+    Next, verify the changes by navigating to [localhost:8080](http://localhost:8080)
+
+    ![m1ex4i51](content/m1ex4i51.png)
+
+1. Interaction with a Running Container
+
+    In the previous task you have made changes to running container. However, these changes are only available to that container and if you were to remove the container, these changes would be lost. One way to address this is by creating a new container image based on running container that has the changes. This way changes will be available as part of a new container image. This is helpful during dev/test phases, where rapid development and testing requires a quick turn-around time. However, this approach is generally not recommended, as it's hard to manage and scale at the production level. Also, if content is the only piece that needs to be changed and shared, then using **volumes** may be another viable option. Volumes are covered in module three.   
+
+    Stop the NGINX container
+    ```bash
+    docker stop mynginx
+    ```
+    To create new image run the command 
+    ```bash
+    docker commit mynginx mynginxv2
+    docker images
+    ```
+
+    ![m1ex4i52](content/m1ex4i52.png)
+
+
+    ### Test the new image run a command  
+    ```bash
+    docker run -d -p 8081:80 mynginxv2
+    ```
+
+    >This will create a new container based on the image "**mynginxv2**".
+
+    Finally, to test the container, navigate to [localhost:8081](http://localhost:8081) in browser. 
+
+    ![m1ex4i53](content/m1ex4i53.png)
+
+---
+## Exercise 5: Tagging
 
 In this exercise you will learn the role of tagging in container and how to tag new and existing container images using Docker commands.
 
+### Tagging Existing Container Image
 
-[Return to list of exercises](#module-1-table-of-contents) - [Return to list of modules](#modules)  
-
-## Tagging Existing Container Image
-
-- In this task you will tag the **mynodejs** container image with **v1**. Recall from the last task that currently this image has the **latest** tag associated with it. You can simply run **docker images** to verify that. When working with container images it becomes important to provide consistent versioning information.  
+- In this task you will tag the **mynginx** container image with **v1**. Recall from the last task that currently this image has the **latest** tag associated with it. You can simply run **docker images** to verify that. When working with container images it becomes important to provide consistent versioning information.  
  
 - Tagging provides you with the ability to tag container images properly at the time of building a new image using the **docker build -t imagename:tag .** command. You can then refer to the image (for example inside Dockerfile with **FROM** statement) using a format **image-name:tag**.
  
@@ -527,451 +495,26 @@ In this exercise you will learn the role of tagging in container and how to tag 
  
 - When you run **docker images** notice the **TAG** column and pay attention to the fact that all of the custom images created in the lab so far have tag value of **latest**. 
 
-    ![](content/mod1image62_2.PNG)    
+    ![m1ex4i54](content/m1ex4i54.png)    
 
-- To understand the importance of tagging take a look at the container image created in the previous section **mynodejsv2**. The **v2** at the very end was appended to provide an indicator that this is the second version of the image **mynodejs**. The challenge with this scheme is that there is no inherent connection between the **mynodejs** and **mynodejsv2**. With tagging, the same container image will take the format **mynodejs:v2**. This way you are telling everyone that **v2** is different but has relation to the **mynodejs** container image.  
+- To understand the importance of tagging take a look at the container image created in the previous section **mynginx**. The **v2** at the very end was appended to provide an indicator that this is the second version of the image **mynginx**. The challenge with this scheme is that there is no inherent connection between the **mynginx** and **mynginxv2**. With tagging, the same container image will take the format **mynginx:v2**. This way you are telling everyone that **v2** is different but has relation to the **mynginx** container image.  
 
 - Please note that tags are just strings. So, any string including **v1**, **1.0**, **1.1**, **1.0-beta**, and **banana** all qualify as a valid tag.  
  
 - You should always want to follow consistent nomenclature when using tagging to reflect versioning. This is critical because when you start developing and deploying containers into production, you may want to roll back to previous versions in a consistent manner. Not having a well-defined scheme for tagging will make it very difficult particularly when it comes to troubleshooting containers.  
  
->Knowledge: A good example of various tagging scheme chosen by Microsoft with dotnet core framework is available at: [https://hub.docker.com/r/microsoft/dotnet/tags](https://hub.docker.com/r/microsoft/dotnet/tags)
+>A good example of various tagging scheme chosen by Microsoft with dotnet core framework is available at: [https://hub.docker.com/r/microsoft/dotnet/tags](https://hub.docker.com/r/microsoft/dotnet/tags)
 
-1. To tag an existing docker image, run the command "**docker tag &lt;&lt;IMAGE_ID or IMAGE_NAME&gt;&gt; mynodejs:v1**". Replace the IMAGE ID with the image id of "**mynodejs**" container image. To see the updated tag for "**mynodejs**" image run the command "**docker images**".
-
-    ![](content/mod1image63_2.PNG)
-    
-    >Note:Notice how **latest** and **v1** both exist. **V1** is technically newer, and **latest** just signifies the image that did not have a version/tag before and can feel misleading.  
-    Also, note the Image ID for both are identical. The image and its content / layers are all cached on your machine. The Image ID is content addressable, so the full content of it is hashed through a hashing algorithm and it spits out an ID.   
-    If the content of any two (or more) images are the same, then the Image ID will be the same, and only one copy of the actual layers are on your machine and pointed to by many different image names/tags.
-
-
-# Tagging New Container Image
-
-Tagging a new image is done at the time when you build a container image. it's a straightforward process that requires you to simply add the **:tag** at the end of container image name.
-
-1. Navigate to the directory **"labs/module1/nginx"** that contains the "**nginx**" files along with Dockerfile. You can use the command   
-     `cd ~/labs/module1/nginx`   
-
-1. Build a new image by running the command  
-`docker build -t nginxsample:v1 .`
-    >Note:In this case you're creating a new image based on Dockerfile (covered in earlier exercise on NGINX).
-
-    ![](content/mod1image64_2.PNG)
-1. If you run a "**docker images**" command, it will list the new container image with tag "**v1**"
-
-    ![](content/mod1image65_2.PNG)
-
-### Congratulations!
-
-You have successfully completed this exercise. Click **Next** to advance to the next exercise.
-
-
-
-# Exercise 6: Building and Running SQL Server 2017 in a Container 
-
- Microsoft SQL Server is one of the most commonly used database server in the market today. Microsoft has made an investment to ensure that customers moving towards containers have an ability to leverage SQL Server through a container image.  
- 
-Previously Microsoft had released container images for Microsoft SQL Server 2016 for both [Linux](https://hub.docker.com/r/microsoft/mssql-server-linux) and [Windows]((https://hub.docker.com/r/microsoft/mssql-server-windows-express) including [Microsoft SQL Server Express Edition](https://hub.docker.com/r/microsoft/mssql-server-windows-expres) and [Microsoft SQL Server](https://hub.docker.com/r/microsoft/mssql-server-windows) (180 days public preview of Enterprise Edition). Currenlty, SQL Server 2017 is only available for Linux Containers and allow users to bring their own license key when starting the container [https://hub.docker.com/_/microsoft-mssql-server](https://hub.docker.com/_/microsoft-mssql-server)  
- 
- In this lab, you will work with Microsoft SQL Server 2017 container image to run a custom database that can store user related information. You will first learn how to associate relevant SQL Server database files to SQL Server container image and how to initialize the database with test data. Then, you will connect a Web Application packaged in another container to the database running inside the SQL Server container. In other words, you will end up with a web application running in a container talking to a database hosted in another container. This is very common scenario, so understanding how it works is important. Let's start by running a SQL Server Express container with the custom database.  
-
-
-[Return to list of exercises](#module-1-table-of-contents) - [Return to list of modules](#modules)  
-
-## SQL Server 2017 Container Image
-
-1. Make sure you have a Terminal opened, and that you are logged in as root. Also, change the current directory to **labs\module1\sqlserver2017** by using the command  
-`cd ~/labs/module1/sqlserver2017`    
-1. Before proceeding further, let's remove all the containers from previous tasks. Run the command   
-`docker rm $(docker ps -aq) -f`    
-1. Look at the **Dockerfile** describing how to package the database  
-`cat Dockerfile`    
-    ![](content/SqlServerDockerfile.PNG)   
- From the Microsoft SQL Server image, we copy the local files to the container. These local files are composed of:  
-**Users.csv** - contains the test data   
-    ![](content/mod1image67.png)   
-**setup.sql** - the SQL commands to create a database named **LabData** and the **Users** table     
-    ![](content/mod1image68.png)   
-**entrypoint.sh** - used as an entry point in the **Dockerfile**. It will start the database server and run **import-data.sh**   
-    ![](content/mod1image69.png)   
-**import-data.sh** - will wait for the server to start and will trigger the database creation, the data import and the ***ping*** command to keep the database alive. Feel free to look at each file we just described to have a better understanding of their role.   
-    ![](content/mod1image70.png)   
-1. Run the command to build our SQL Server container image   
-`docker build -t mysqlserver .`   
-    ![](content/mod1image71.png)   
-1. Once built, run the start your with the following command (note that we explicitly name our container)    
-`docker run -e ACCEPT_EULA=Y -e SA_PASSWORD=P@ssw0rd123! -d -p 1433:1433 --name mydb mysqlserver`  
->Note: The docker run command has various parameters. The following table provides a description for parameters specific to SQL server. See the the [docker hub](https://hub.docker.com/_/microsoft-mssql-server) for an exhaustive list of parameters.   
-<table>
-  <thead>
-  <tr class="header">
-  <th>Parameter</th>
-  <th>Description</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr class="odd">
-  <td>SA_PASSWORD</td>
-  <td>The system administrator (userid = 'sa') password used to connect to SQL Server once the container is running. The password in this case is provided in plain text for brevity. However, best practice is to use secrets in Docker: <a href="https://docs.docker.com/engine/reference/commandline/secret">https://docs.docker.com/engine/reference/commandline/secret</a></td>
-  </tr>
-  <tr class="even">
-  <td>ACCEPT_EULA</td>
-  <td>Confirms acceptance of the end user licensing agreement found <a href="http://go.microsoft.com/fwlink/?LinkId=746388">here</a>.</td>
-  </tr>
-  <tr class="odd">
-  <td>-e</td>
-  <td>Flag that is used to pass environment variables to the container. In this particular case password and license eula are passed as environment variable.</td>
-  </tr>
-  </tbody>
-</table>  
-
-![](content/mod1image72.png)   
-
-6. You can follow the database initialization with the command ***docker logs mydb -f*** until you see the ***ping*** command starting. Once it started, you can interrupt ***docker logs*** by hitting ***CTRL + C***  
-    ![](content/mod1image73.png)   
-  ...   
-    ![](content/mod1image73_2.png)   
-    >Note: **LabData** is listed as a new database and that we imported 3 rows (coming from **Users.csv**).  
-
-1. Run the following command to open an interactive session within the database container with **sqlcmd**. **Sqlcmd** is a basic command-line utility provided by Microsoft [https://docs.microsoft.com/en-us/sql/relationaldatabases/scripting/sqlcmd-use-the-utility](https://docs.microsoft.com/en-us/sql/relationaldatabases/scripting/sqlcmd-use-the-utility) for ad hoc, interactive execution of Transact-SQL statements and scripts   
-`docker exec -it mydb /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P P@ssw0rd123!`  
-    ![](content/mod1image74.png)    
-1. Let's begin by listing down all the databases available by running the command  
-```sql
-SELECT name FROM master.dbo.sysdatabases   
-GO
-```  
-    ![](content/mod1image75.png)   
-
->Note: **LabData** is listed at the very bottom.   
-
-1. Now let's check that the users we had in **Users.csv** have been properly ingested into the database  at initialization    
-```sql
-USE LabData  
-SELECT * FROM Users  
-GO
-```   
-    ![](content/mod1image76.png)   
-1. Now let's exit the **sqlcmd** session. Note that the database will still be running in the background    
-`exit`   
-
-## Connect Application to the SQL Server Container   
- 
-1. Now we will connect an ASP .NET Core Application to our SQL Server and show that it can see the data stored in the database. Change the current directory to **labs/module1/aspnetcorewithsqlserver** by using the command  
-`cd ~/labs/module1/aspnetcorewithsqlserver`    
-1. First, we need to know what is the IP address of the container running the SQL Server so that the front end web application. Run the following command and note down the IP Address  
-`docker inspect mydb`   
-    ![](content/mod1image77_3.PNG)   
-  ...   
-    ![](content/mod1image77_4.PNG)
-1. Now we need to update the connection string used by the web app to connect to the SQL Server back end. Open the **Startup.cs** and replace **localhost** in the connection string by the IP address we just copied. Once finish making changes press **CTRL + X** and then press **Y** when asked for confirmation to retain your changes. Finally, you will be asked for file name to write. For that press **Enter** (without changing the name of the file). This will close the nano text editor.     
-`nano Startup.cs`    
-    ![](content/mod1image78_2.PNG)
-1. We are now ready to build the ASP .NET Core web application. Run `dotnet build` to build it.  
-    ![](content/mod1image79_2.PNG)   
-1. Then publish the artifacts in a **published** folder with  
-`dotnet publish -o published`    
-    ![](content/mod1image80_2.PNG)  
-1. Now, we are ready to build our container that we will tag with an explicit **withsql** string    
-`docker build -t myaspcoreapp:3.1-withsql .`     
-    ![](content/mod1image81_2.PNG)  
-1. Finally, run the container  and expose the web app on port **8082**  
-`docker run -d -p 8082:80 myaspcoreapp:3.1-withsql`       
-    ![](content/mod1image82_2.PNG)   
-1. Open a browser and naviguate to **localhost:8082**. The web app should display the list of users that we ingested in the database.   
-    ![](content/mod1image83.png)   
-1. Click on **Create New Users** and add a new user name.  
-    ![](content/mod1image84.png)   
-    >Note: You could remove the front end container and re-run it, you would still see the new user that you have created since it is stored in the SQL Server container.   
-
-1. We have reached the end of the lab, let's remove all the containers to leave the environment in a clean state. Run the command   
-`docker rm $(docker ps -aq) -f`     
-
-### Congratulations!
-
-You have successfully completed this module. Click **Next** to advance to the next module.
-
-
-
-# Module 5 - Working with Kubernetes MiniKube 
-
-### Duration
-
-45 minutes
-
-# Module 5: Table of Contents    
-
-[Exercise 1: Setup and Configure Minikube on a Virtual Machine](#exercise-1-setup-and-configure-minikube-on-a-virtual-machine)  
-
-[Exercise 2: Working with Replica Sets, Deployments and Health Probes](#exercise-2-working-with-replica-sets-deployments-and-health-probes)  
-
-# Exercise 1: Setup and Configure MiniKube on a Virtual Machine
-
-In this exercise you will setup and configure MiniKube on an Ubuntu VM. MiniKube is a tool that makes it easy to run Kubernetes locally and runs a single-node Kubernetes cluster.
-
->Note:Note that the virtual machine you are using supports nested virtualization. If you want to use your enterprise or MyVisualStudio (MSDN) account in the future to provision a VM, you must use a Standard\_D2s\_v3 or higher on Azure. The Azure Passes given during this workshop do not provide nested virtualization VMs in Azure.
-
-[Return to list of exercises](#module-5-table-of-contents) - [Return to list of modules](#modules)  
-
-## Install Minikube
-
-1. Sign into your LOD Ubuntu VM.  
-
-1. Open a **terminal** by right clicking anywhere on the Desktop.
-
-    ![](content/media/image66.png)
-
-1. Go into root and type in **@lab.VirtualMachine(UbuntuBase).Password** for the password
-
-    `sudo -i`
-
-1. Run the following commands:
-
+1. To tag an existing docker image, run the command 
     ```bash
-    rm /var/lib/apt/lists/lock
-    
-    rm /var/cache/apt/archives/lock
-
-    rm /var/lib/dpkg/lock
+    docker tag mynginx:latest mynginx:v1
+    docker images
     ```
 
-1. Navigate to the lab files by running:
-`cd labs/module5`  
-
-    ![](content/media/image67.png)  
-
-1. You are now to install Minikube. Run the following two commands (the first command gives execute permission to your script, the second script runs it):
-
-    ```bash
-    chmod +x install-minikube.sh
-    ./install-minikube.sh
-    ```
-
-    ![](content/media/image68.png)
-1. Read over the contents of the bash file you just ran while it is installing (the install will take at ~15 minutes. Feel free to start the  Module 5 - Orchestrator Lab on the Windows VM in the meantime):
-
-    ![](content/media/image69.png)
+    ![m1ex4i55](content/m1ex4i55.png)
     
-    >Note: After minikube installation is completed, the last command in the text file will start the minikube with a single node Kubernetes cluster.
-    
-    ![](content/media/image70.png)
+    >Notice how **latest** and **v1** both exist. **V1** is technically newer, and **latest** just signifies the image that did not have a version/tag before and can feel misleading. Also, note the Image ID for both are identical. The image and its content / layers are all cached on your machine. The Image ID is content addressable, so the full content of it is hashed through a hashing algorithm and it spits out an ID. If the content of any two (or more) images are the same, then the Image ID will be the same, and only one copy of the actual layers are on your machine and pointed to by many different image names/tags.
 
-1. You can always find out more about minikube commands using the help switch, try running it now 
-    >Note:Do not worry about the screen color in the screenshots being different from your Ubuntu VM!):
 
-    ```Command-nocopy
-    minikube --help
-    ```
-    
-    ![](content/media/image71.png)
 
-    You are now going to create a simple deployment based on ***nginx*** container image and expose it using a service.  
-
-1. Create a deployment and name it ***nginx***
-
-    ```Command-nocopy
-   kubectl run nginx --image=nginx --port=80
-    ```
-
-1. Expose the deployment using a service   
-    `kubectl expose deployment nginx --type=NodePort`  
-1. Check that your deployment as well as your service are ready  
-    `kubectl get deployment`  
-    ![](content/media/image72.png)  
-    
-    `kubectl get service`   
-
-    ![](content/media/image73.png)
-
-1. Access the nginx default web page using the curl command.  
-    `curl $(minikube service nginx --url)`  
-
-    ![](content/media/image74.png)  
-
-1. Clean up the deployment and service with the following commands
-
-    `kubectl delete service nginx`  
-    `kubectl delete deployment nginx`
-
-### Congratulations!
-
-You have successfully completed this exercise. Click **Next** to advance to the next exercise.
-
-
-
-# Exercise 2: Working with Replica Sets, Deployments and Health Probes
-
-
-[Return to list of exercises](#module-5-table-of-contents) - [Return to list of modules](#modules)  
-
-## Working with the health probe
-
-In this task you will create a new pod and enable a health probe. To test the probe, pod will run a single container that is going to explicitly fail the health probe request after every 5 probes.
-
-1. You should still be in the **/labs/module5** folder, if not, navigate to there.
-
-1. Create the pod using the yaml file:  
-`kubectl apply -f liveness-probe.yaml`  
-
-1. Check the status of the newly created pod. It may take few seconds for the container to be up and running.  
-`kubectl get pods`  
-    
-    >Note: The ***STATUS*** column shows Running and ***RESTARTS*** column have the value zero. That's expected because container is just started, and the health probe has not failed yet.
-    
-    ![](content/media/image75.png)
-
-1. After 3-4 minutes if you view the status of pods again you should see the RESTARTS column with the value 1 (or higher depending on how long you have waited to check the status of the pod)
-
-    ![](content/media/image76.png)
-    
-    >Note: If you wait for few more minutes and check the status of pod again you should see the value of RESTARTS column changes to a higher number.
-
-1. Behind the scenes, every time a container fails the health probe it will be restarted again. To get bit more information about the failing health probe run the following command:  
-`kubectl describe po liveness-probe`  
-
-    >Note: This describes the pod in detail along with the events that are happening including the failed health probes
-
-    ![](content/media/image77.png)
-
-1. Eventually after failing the health probes multiple times in a short interval container will be put under ***CrashLoopBackOff*** status.  
-
-    ![](content/media/image78.png)
-
-1. You can view the logs from the container that is terminated by using the command:  
-`kubectl logs liveness-probe --previous`  
-    
-    >Note: The sample docker container application is basic so very limited information is available in logs but typically for production ready applications its recommended to write more detailed messages to the logs.
-
-1. Finally, remove the pod  
-`kubectl delete pod liveness-probe`  
-
-
-[Return to list of exercises](#module-5-table-of-contents) - [Return to list of modules](#modules)  
-
-# Working with Replica Set
-
-1. In this task you will first create a replica with predefined labels assigned to pods. Later you will change the labels for a pod and observe the behavior of replica set.
-
-    >Knowledge: A **Replica Set** ensures how many replicas of a pod should be running. It can be considered as a replacement of replication controller. The key difference between the replica set and the replication controller is, the replication controller only supports equality-based selector whereas the replica set supports set-based selector.
-
-    >Note: The ***nginx-rc.yaml*** file is available inside the ***/labs/module5*** subfolder and contains definition of replica set. If you review the content of file you will notice that it will maintain 3 pods with each running nginx container. Pods are also labeled ***app=webapp***.
-
-    To create the replica set and pods run the following command in the **labs/module5** directory.
-
-    `kubectl create -f nginx-rc.yaml`
-
-1. Let's look at the pods along with their labels.  
-`kubectl get pods --show-labels`   
-    
-    ![](content/media/image79.png)  
-
-     You can also list all the replica sets that are available by using the command:  
-   `kubectl get replicaset`
-    
-    ![](content/media/image80.png)
-
-    >Note:Notice we have three pods running. If you delete one of them, replica set will ensure that total pods count remain three and it will do that by creating a new pod.
-
-1. First delete one of the pods 
-    >Note: Get name from this command: `kubectl get pods \--show-labels`
-
-    `kubectl delete pod <POD_NAME>`
-
-1. Now, check the pods again. Notice you still have three pods running and one of them is terminating.  
-
-    `kubectl get pods --show-labels`  
-    
-    ![](content/media/image81.png)  
-
-1. Another factor that plays an important role in determining pods relationship with replica set is the labels. Currently ***app=webapp*** is the selector used by replica set to determine the pods under its watch. If you change the label of a pod from ***app=webapp*** to say ***app=debugging*** then replica set will effectively remove it from its watch and create another pod with the label ***app=webapp***. For replica set its job is to maintain the total count of pods to three as per the definition provided in the yaml file.
-
-    `kubectl label pod <POD_NAME> app=debugging --overwrite=true`   
-
-1. View the pods again and notice that there are four pods running. Replica set created an additional pod immediately after it noticed pod count was less than three.  
-
-    `kubectl get pods --show-labels`  
-    
-    ![](content/media/image82.png)  
-
-1. Replica set is essentially using selector (defined in the yaml file) to which pods to observe. In this case its label ***app*** matching value ***webapp***. You can also get all the pods with ***app=webapp*** label using the following command.
-
-    `kubectl get pods --show-labels -l app=webapp`
-
-1. Finally remove the replica set using the following command.  
-
-    `kubectl delete replicaset nginx-replica`  
-
-1. As part of the deletion process replica set will remove all the pods that it had created. You can see that by listing the pods and looking at the ***STATUS*** column which shows ***Terminating***.  
-
-    `kubectl get pods`  
-    
-    ![](content/media/image83.png)
-
-    Eventually pods will be removed. However, if you list the pods again the pod with label ***app=debugging*** is still ***Running***.
-    
-    `kubectl get pods --show-labels`  
-    
-    ![](content/media/image84.png)
-
-     Since you have change the label this pod is no longer manage by the replica set. In cases like these you can bulk remove pods based on labels. 
-    
-    `kubectl delete pods -l app=debugging`  
-
-
-[Return to list of exercises](#module-5-table-of-contents) - [Return to list of modules](#modules)  
-
-# Working with Deployments
-
-1. In this task you will begin by performing a deployment based on specific version of the nginx container image (v 1.7.9). Later you will leverage a RollingUpdate strategy for deployment to update pods running nginx container image from v1.7.9 to container image 1.8.
-
-    >Note: The **nginx-deployment.yaml** file is available inside the **/labs/module5** subfolder and contains definition of deployment. If you review the content of file you will notice that it will maintain 2 pods with each running nginx container image v1.7.9. Pods are also labeled **app=nginx**.
-
-    Run the following command from the **labs/module5** directory:
-
-    `kubectl create -f nginx-deployment.yaml`  
-
-1. Notice the deployment status by running the command:
-
-    `kubectl get deployment`  
-
-    ![](content/media/image85.png)
-
-1. If you list the pods you should see the out similar to following:
-
-    `kubectl get pods --show-labels`    
-
-    ![](content/media/image86.png)
-
-    >Note: Notice the **LABELS** column and presence of **pod-template-hash** label. This label is used by the deployment during the update process.  
-
-1. You are now going to update the deployment. You are going to update nginx container image from **v1.7.9** to **v1.8**. Before you do that first check the existing definition of the deployment:
-
-    `kubectl describe deployment nginx-deployment`
-
-    ![](content/media/image87.png)
-
-    >Note: Notice the line **Image: nginx:1.7.9** which confirms that the current deployment is using **1.7.9** version of **nginx** image.
-
-1. Perform the update using the command below.  
-
-    `kubectl apply -f nginx-deployment-updated.yaml`  
-    
-    >Note: If you review the content of **nginx-deployment-updated.yaml** file and compare it with original **nginx-deployment.yaml** the only difference is the image tag which is changed from **1.7.9** to **1.8**.  
-
-1. If you immediately (after step 5) run the command to list all the pods you should see output like following:
-
-    `kubectl get pods --show-labels`  
-
-    ![](content/media/image88.png)
-
-    >Note: Notice that the deployment strategy of rolling update ensures that the old pods (nginx **v1.7.9**) are terminated only after new pods (nginx image **v1.8**) are in a running state. Also notice that the label **pod-template-hash** values are different for old and new pods. This is because the pod definition (due to change of image tag) is not same for both deployments.
-
-1. You can also look at the new deployment details and make sure that correct nginx image (**v1.8**) is used.
-
-    `kubectl describe deployment nginx-deployment`  
-
-
-# Congratulations!
-
-You have successfully completed this lab. To mark the lab as complete, click **End**.
+# Congratulations you have successfully completed this module
