@@ -308,7 +308,7 @@ docker run -d -p 8080:80 mynginx
 
 ![](content/media/image40.png)
 
-1. To test the node app, go to your browser and navigate to  [localhost:8080](hgttp://localhost:8080).
+1. To test the node app, go to your browser and navigate to  [localhost:8080](http://localhost:8080)
 
 ![m1e3i41](content/m1e3i41.png)
 
@@ -316,39 +316,84 @@ docker run -d -p 8080:80 mynginx
 # Building and Running ASP.NET Core 3.x Application Inside A Container
 
 1. In this task you will build ASP .NET Core 3.x application and then package and run it as a container. Change to the relevant directory **labs/module1/aspnetcore**. First, we need to run **dotnet build**, and **publish** to generate the binaries for our application. This can be done manually or by leveraging a **Dockerfile**. In this example, we will run the commands manually to produce the artifacts in a folder called **published**. The **Dockerfile** will only contain instructions to copy the files from the **published** folder into the image.  
-     `dotnet build`
-    ![](content/mod1image42_2.PNG)   
+     
+## Install .NET Core 3.1
+If Needed, install .NET Core 3.1 on your Ubuntu 18.04 linux shell using the following commands 
 
-     `dotnet publish -o published`  
-    ![](content/mod1image43_2.PNG)
+In your Linux terminal run the following commands 
+```bash
+wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+```
 
-1. Now that the application is ready, you will create your container image. The Dockerfile is provided to you. View the content of Dockerfile by running the **nano Dockerfile** command. To exit the editor press **CTRL+X**.. 
-    >Note:The Dockerfile contents should match the screenshot below:  
+Install dotnet core SDK
 
-    ![](content/mod1image44_2.PNG) 
-1. To create the container image run the command   
-`docker build -t myaspcoreapp:3.1 .`
+```bash
+sudo apt-get update; \
+  sudo apt-get install -y apt-transport-https && \
+  sudo apt-get update && \
+  sudo apt-get install -y dotnet-sdk-3.1
+```
+Verify Installation Successful but running 
+```bash
+dotnet --version
+```
 
-    >Note:Notice the **3.1** tag representing the dotnet core framework version.  
+output should be similiar to the following
+```
+rpatterson@levelup:~$  dotnet --version
+3.1.410
+```
+
+## Create ASP.NET Core Image
+Now that .NET Core 3.1 SKD is installed we can create the image & cotnainer.
+
+     ```bash
+     # change to the correct directory 
+     cd ../aspnetcore
+     dotnet build
+     ```
     
-    ![](content/mod1image45_2.PNG)
+![](content/mod1image42_2.PNG)   
+
+```dotnet publish -o published```
+    
+![](content/mod1image43_2.PNG)
+
+1. Now that the application is ready, you will create your container image. The Dockerfile is provided to you. View the content of Dockerfile by running the following command
+```
+code Dockerfile
+```
+![](content/mod1image44_2.PNG) 
+
+1. To create the container image run the command   
+```
+docker build -t myaspcoreapp:3.1 .
+```
+
+>Notice the **3.1** tag representing the dotnet core framework version.  
+    
+![](content/mod1image45_2.PNG)
 
 1. Launch the container running your application using the command  
-`docker run -d -p 8090:80 myaspcoreapp:3.1`  
+```docker run -d -p 8090:80 myaspcoreapp:3.1  ```
 
-    ![](content/mod1image46_2.PNG)
+![](content/mod1image46_2.PNG)
 
-    >Note:You are now running ASP.NET Core application inside the container listening at port 80 which is mapped to port 8090 on the host.
+>You are now running ASP.NET Core application inside the container listening at port 80 which is mapped to port 8090 on the host.
 
-1. To test the application, go to **localhost:8090** in your **Firefox** browser.  
+1. To test the application, open your browser and navigate to [localhost:8090](http://localhost:8090).  
 
-    ![](content/mod1image47_2.PNG)
+![](content/mod1image47_2.PNG)
+
+Notice that the container ID listed on the web page is identical to the container ID assigned by Docker
+
 
 ### Congratulations!
 
-You have successfully completed this exercise. Click **Next** to advance to the next exercise.
+You have successfully completed this exercise
 
-
+--- 
 
 # Exercise 4: Interaction with a Running Container
 
