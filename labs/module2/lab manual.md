@@ -8,9 +8,7 @@
 
 [Exercise 2: Building and Running an IIS Server Windows Container Image](#exercise-2-building-and-running-an-iis-server-windows-container-image)
 
-[Exercise 3: Building and Running an ASP.NET 4.7 Application in a Container](#exercise-3-building-and-running-an-aspnet-47-application-in-a-container)
-
-[Exercise 4: Building an ASP.NET Core Application](#exercise-4-building-an-aspnet-core-application)  
+[Exercise 3: Building an ASP.NET Core Application](#exercise-3-building-an-aspnet-core-application)  
 
 ### Prerequisites
 
@@ -197,90 +195,65 @@ In the exercise you will learn how to install IIS Web Server (Web Server Role) o
     cd labs\module2\iis\
     ```
    
-2. The iis folder contains the Dockerfile with instructions to install IIS Server (Web Server Role) on the Windows Server Core base image. Display the Dockerfile by running the command `cat .\Dockerfile`
+1. The iis folder contains the Dockerfile with instructions to install IIS Server (Web Server Role) on the Windows Server Core base image. Display the Dockerfile using VS Code by running the command 
+
+    ```
+    code Dockerfile
+    ```
    
     ![](content/image13.png)
    
    - The **FROM** instruction points to the **mcr.microsoft.com/windows/servercore** to be used as a base image for the new container image
    - The **RUN** instruction executes PowerShell to install Windows Feature "Web Server" (IIS Server)
-   - The next command is the **ADD** instruction which copies the **ServiceMonitor.exe** utility to the container image. The **ServiceMonitor.exe** is a utility that monitors **w3svc** service inside the container, if the service fails, the exe fails, so Docker knows the container is unhealthy. The **ServiceMonitor.exe** is developed and released by Microsoft (<https://github.com/microsoft/iis-docker/tree/master/windowsservercore-ltsc2019)>
+   - The next 2 commands **COPY** the *index.html* and  *ServiceMonitor.exe* files to the container image. The **ServiceMonitor.exe** is a utility that monitors **w3svc** service inside the container, if the service fails, the exe fails, so Docker knows the container is unhealthy. The **ServiceMonitor.exe** is developed and released by Microsoft (<https://github.com/microsoft/iis-docker/tree/master/windowsservercore-ltsc2019)>. The *index.html* files replace the default IIS page displayed by your browser. 
    - The **EXPOSE** instruction does not actually publish the port. It functions as a type of documentation between the person who builds the image and the person who runs the container, about which ports are intended to be published.    
    - The **ENTRYPOINT** instruction makes sure that monitoring of **w3svc** begins immediately as soon as container starts running. This is what will keep the container in running state. 
 
-3. To build the new image with IIS installed on it, run the command `docker build -t myiis:v1 .`. This command builds a new container image with name **myiis** and tag **v1**. The tag conveniently tells everyone information pertaining to the version of the image. 
-   
-   > Note: **STEP 3/6** of the build process performs the installation of the Web-Server (IIS Server) and may take few minutes. Eventually you should see the results as follow. 
-   
-    ![](content/image15.png)
+   close VS Code
 
-4. Run a new container based on **myiis:v1** image by using the command: `docker run -d -p 8099:80 myiis:v1`
+1. To build the new image with IIS installed on it, run the command 
+
+    ```powershell
+    docker build -t myiis:v1 .
+    ```
+    This command builds a new container image with name **myiis** and tag **v1**. The tag conveniently tells everyone information pertaining to the version of the image. 
    
-    ![](content/image16.png)
+   > Note: **STEP 5** of the build process performs the installation of the Web-Server (IIS Server) and may take few minutes. Eventually you should see the results as follow. 
+   
+    ![image15](content/image15.png)
 
-5. The full container ID is shown after the run command (**d83** in the above screenshot), or can be obtained by using `docker ps`
+1. Run a new container based on **myiis:v1** image by using the command
+    ```powershell
+    docker run -d -p 8099:80 myiis:v1
+    ```
+   
+   Output:
+    ```
+    PS C:\labs\module2\iis> docker run -d -p 8099:80 myiis:v1
+    55e05db5dac188c3c740bdf43a86fccdeddaa1f159e7258702417f1dcedbad55
+    PS C:\labs\module2\iis>
+    ```
+1. The full container ID is shown after the run command (**55e** in the above screenshot), or can be obtained by using ```docker ps```
 
-6. To get the IP address of the container, run the following command:  
-   `start http://localhost:8099`
 
 7. Open any web browser of your choice and browse to the IP address from the previous step.  
    
-    ![](content/image18.png)  
-   
-   > Note: You can get the container's IP address of the container with **docker inspect** command as follow: **docker inspect --format '{{ .NetworkSettings.Networks.nat.IPAddress}} ' containerid **. When accessing the container using it's IP Address you would use the port the container is listening on (port 80 in this case)
+   ```
+   start http://localhost:8099
+   ```
 
-### Congratulations!
+    ![image18](content/image18.png)  
+   
+
+### Summary
 
 This concludes the exercise on creating a new image with IIS server. If you are looking to leverage IIS server beyond this lab, then you
 may want to use Microsoft official IIS server image (**mcr.microsoft.com/windows/servercore/iis**) which is available at (<https://hub.docker.com/r/microsoft/iis/)>. The underlying process is pretty much same but the main benefit of using the official IIS image is that Microsoft releases updated images on a regular basis including patches and fixes.
 
-You have successfully completed this exercise. Click **Next** to advance to the next exercise.
-
-# Exercise 3: Building and running an ASP.NET 4.7 application in a container
-
-In this task, you will learn how to package an existing ASP.NET 4.7 web application into a container. It's important to understand that Microsoft supports both the latest .NET frameworks like .NET Core, ASP.NET Core etc. as well as more legacy .NET Frameworks like .NET 3.5, .NET 4.5 and ASP.NET 4.5 on Windows Containers. Most customers today have critical workloads that depend on some legacy Microsoft technologies, therefore Microsoft provides a path for application containerization for legacy applications in addition to more modern apps.
-
-> Knowledge: You can find more comprehensive list of application frameworks supported by Microsoft on Windows Containers at: [https://docs.microsoft.com/en-us/virtualization/windowscontainers/samples#Application-Frameworks](https://docs.microsoft.com/en-us/virtualization/windowscontainers/samples#Application-Frameworks)
-
-[Return to list of exercises](#module-2-table-of-contents) - [Return to list of modules](#modules)  
-
-## Build and run an ASP.NET 4.7 MVC application
-
-1. Make sure you have a PowerShell console open as an administrator (if you have followed previous task you should already be running a console). Also, change the current directory to **aspnet 4.7** by running the command `cd C:\labs\module2\aspnet4.7\ `   
-   
-   ![](content/image19.png)  
-
-2. Before proceeding further, let's stop and remove all the running containers from previous task. Run the command  `docker rm -f (docker ps -aq)`
-   
-    ![](content/image20.png)  
-
-3. Let's examine the Dockerfile. Display its content by running the command `cat .\Dockerfile` 
-   
-    ![](content/image22.png)  
-   
-   - The first noticeable statements are the two **FROM** statements which are used in what is called, a **multi-staged build** process. It allows us to create two Docker images with a single **docker build** command
-   - The first image is built on top of the .NET 4.7 SDK base image containing all utilities necessary to build your application: **mcr.microsoft.com/dotnet/framework/sdk:4.7.2-windowsservercore-ltsc2019**. This resulting image will be much bigger than what is required to simply run your application. This build stage will produce all application artifacts that will be picked up when building the second image. They will be copied in the folder **/app/WebAppLegacy** of the first image. Also note that this first image is identified as **build**   
-   - The second image is built on top the .NET 4.7 runtime base image and only contains what is needed to run the application: **mcr.microsoft.com/dotnet/framework/aspnet:4.7.2-windowsservercore-ltsc2019**. It uses the output from the first image to build its own runtime image **COPY --from=build /app/WebAppLegacy/. ./** . Keeping an image as small as possible is beneficial to reduce the attack surface (less tools equals less opportunities to exploit in an attack) and they will be much faster to download at deployment time.   
-
-4. Build a new image with web application packaged inside it by running the command  `docker build -t aspnetapp:v4.7 .`. Notice the tag **v4.7** that indicates the version of ASP.NET framework. The use of this tag is optional but recommended.      
-   
-   > Note: At the end of the build process, feel free to look at the produced images with **docker images**. You will see the two images that have been built, the SDK image (that is not named) and the image that is actually going to be hosting our application: **aspnetapp:v4.7**. We can automatically remove the SDK image once the runtime image is built. For that, use the **--rm** parameter in the **docker build** command   
-
-5. To run a container with the ASP.NET 4.7 web application based on the container image we just built, run the command: `docker run -d -p 8088:80 aspnetapp:v4.7`
-   
-    ![](content/image24.png)  
-
-6. Start your default browser and connect to the web site running in the container using the port mapped from the host (8088) : `start http://localhost:8088`
-   
-    ![](content/image26.png)  
-
-### Congratulations!
-
-You have successfully completed this exercise. Click **Next** to advance to the next exercise.
-
-# Exercise 4: Building an ASP.NET Core application
+# Exercise 3: Building an ASP.NET Core application
 
 In the previous task, you built container images using some of the more mature technologies and products released by Microsoft. In this task,
-you will build container that will run ASP.NET Core Web Application. If you completed the Module 1 lab, this will be very similar. However, we will now build the Core application on Windows instead of Linux. Furthermore, we will use the multi-stage build process rather than building the application manually with **dotnet** CLI.  
+you will build container that will run ASP.NET Core Web Application. If you completed the Module 1 lab, this will be very similar. However, we will now build the ASP.Net Core application on Windows instead of Linux. Furthermore, we will use the multi-stage build process rather than building the application manually with **dotnet** CLI.  
 
 ASP.NET Core is a significant step forward for Microsoft to allow ASP.NET to run across platforms including MacOS, Linux and Windows.
 ASP.NET sits on top of .NET Core, so it also offers cross-platform support. 
@@ -289,29 +262,44 @@ ASP.NET sits on top of .NET Core, so it also offers cross-platform support.
 
 In this exercise, you will package a simple ASP.NET Core MVC application into a container image using a Dockerfile. Finally, you will run container hosting the ASP.NET Core application using the **docker run** command.    
 
-[Return to list of exercises](#module-2-table-of-contents) - [Return to list of modules](#modules)  
+## Building and Running ASP.NET Core 3.x Application Inside Container
 
-# Building and Running ASP.NET Core 3.x Application Inside Container
+1. Change to the relevant directory using the following command: 
+    ```powershell
+    cd labs\module2\aspnetcore
+   ```
 
-1. Change to the relevant directory using the following command: `cd C:\labs\module2\aspnetcore`  
-   
-   ![](content/image53.png)  
+2. You are provided with a Dockerfile. View the content of the Dockerfile by running the command 
 
-2. You are provided with a Dockerfile. View the content of the Dockerfile by running the command `cat .\Dockerfile`. The Dockerfile should look like the one below (note this is a multi-stage Dockerfile just like the .NET 4.7 example). 
+    ```powershell
+    code Dockerfile
+    ```
+    
+    The Dockerfile should look like the one below (note this is a multi-stage Dockerfile). 
    
    ![](content/image54_2.PNG)
 
-3. To create the container image run the command `docker build -t aspnetcoreapp:3.1 .` 
-   
-   > Note: Notice the use of tag **3.1** that signifies the dotnet core 3.1 framework version
+3. To create the container image run the command 
 
-4. Launch the container running the app inside it by running the command `docker run -d -p 9000:80 aspnetcoreapp:3.1` 
+    ```powershell
+    docker build -t aspnetcoreapp:3.1 .
+    ``` 
    
-   ![](content/image56_2.PNG) 
+   > Notice the use of tag **3.1** that signifies the dotnet core 3.1 framework version
 
+4. Launch the container running the app inside it by running the command        
+    
+    ```powershell
+    docker run -d -p 9000:80 aspnetcoreapp:3.1
+    ``` 
+   
 5. You are now running ASP.NET Core application inside the container listening on the port 80 which is mapped to port 9000 on the host.
 
-6. To see the ASP.NET Core web application in action open the web browser and navigate to **localhost** port **9000** `start http://localhost:9000 `. This will take you to the Home page of the Web Application.  
+6. To see the ASP.NET Core web application in action open the web browser and navigate to **localhost** port **9000** 
+
+    ```powershell
+    start http://localhost:9000
+    ```
    
     ![](content/image58_3.png)
 
