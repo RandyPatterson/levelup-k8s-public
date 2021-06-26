@@ -62,8 +62,6 @@ Right click on the Docker icon in the taskbar and swith to Windows Contianers if
 
 In this exercise, you will learn about the Windows Nano Server and Server Core images. Please read below for an overview of each image. Then you will complete the steps to build and run these containers.
 
-[Return to list of exercises](#module-2-table-of-contents) - [Return to list of modules](#modules)  
-
 ## Windows Server Core Overview
 
 Microsoft starting with Windows Server 2016 has an option of Server Core installation. The Server Core option reduces the amount of space required on disk, the potential attack surface, and especially the servicing requirements. It is recommended that you choose the Server Core installation unless you have a need for the additional user interface elements and graphical management tools that are included in the Server with Desktop Experience option. For an even more lightweight option, see the next section on Nano Server. Server Core allows you to install various Server roles that may not be available in Nano Server including those listed below:
@@ -103,11 +101,11 @@ For a comprehensive list of capability differences between Nano Server and Serve
 
 Since Windows Server 2016, Microsoft offers both Nano Server and Server Core in the form of Docker images through Docker Hub. With the GA of Windows Server 2019, Microsoft also announced that its base images will now be hosted in the Microsoft Container Registery or MCR. For information on this change, visit [https://azure.microsoft.com/en-us/blog/microsoft-syndicates-container-catalog/](https://azure.microsoft.com/en-us/blog/microsoft-syndicates-container-catalog/). These images will still be discoverable via Docker Hub.  The nature of application you are building typically dictates your selection of base image. For example, the SQL Server 2016 Express image will need Server Core as its base image, but a simple windows service may able to run just fine on Nano server. In the following exercise, you will run a  basic "hello world" container leveraging both the Nano and Server Core images. 
 
-## Run a container based on the Nano Server base image
+### Run a container based on the Windows Server Core and Nano Server images
 
 You will need to run the commands in this section using the PowerShell console as an administrator. Launch PowerShell using the Windows Terminal
 
-<img src="./content/m2e1i1.png" title="" alt="m2e1i1" width="632">
+![m2e1i1](content/m2e1i1.png)
 
 Navigate to the **module2** directory
 
@@ -115,9 +113,9 @@ Navigate to the **module2** directory
 cd module2
 ```
 
-1. The PowerShell console is now available to you. Make sure you are inside of the **module2** labs directory. You can do that by running the command `cd C:\labs\module2\ ` This will put you inside the **module2** lab folder where all the necessary files are located. 
+1. The PowerShell console is now available to you. Make sure you are inside of the **module2** labs directory. 
    
-    ![](content/image4.png)
+    ![image4](content/image4.png)
 
 2. First, let's get the list of all the container images available on this Docker host by running the command 
    
@@ -129,10 +127,11 @@ cd module2
    
    ```powershell
    docker pull mcr.microsoft.com/windows/servercore:2004
+   docker pull mcr.microsoft.com/windows/nanoserver:2004
    ```
    
    - [Docker Hub](https://hub.docker.com/_/microsoft-windows-servercore)
-   - [Nano Server (docker.com)](https://hub.docker.com/_/microsoft-windows-nanoserver)
+   - [Nano Server](https://hub.docker.com/_/microsoft-windows-nanoserver)
    
    Notice that you already have **windows/servercore** and **windows/nanoserver** images available to you representing **Server Core** and **Nano Server** images.   
    
@@ -140,54 +139,64 @@ cd module2
    
     ![](content/image5_2.PNG)
 
-3. You will now run a container based on **Server Core** image (**mcr.microsoft.com/windows/servercore**). Before you do that, run the command `hostname`. This will reveal the hostname of your virtual machine. 
+3. You will now run a container based on **Server Core** image (**mcr.microsoft.com/windows/servercore**). Before you do that, run the command `hostname`. This will reveal the hostname of your laptop. 
    
-   > Note:Please note that your host machine name may be different.
+   > Please note that your host machine name will be different.
    
-    ![](content/image6.png)
+    ```dos
+    PS C:\Users\rpatterson\levelup-k8s-public\labs\module2> hostname
+    levelup
+    ```
 
-4. Run the command `docker run -it mcr.microsoft.com/windows/servercore:1809 powershell `. Please be patient as it will take a minute or so for this command to work. The **-it** switch provides you with an interactive session. The **powershell** is a parameter passed as an argument which basically gives you access to Powershell (command line) running inside the container. Technically, the **-it** switch puts you inside a running container.  
-   
-   > Note:Please be patient as it will take a minute or so for this command to work. The "**it**" switch provides you with an interactive session. The '**CMD'** is a parameter passed as an argument which basically gives you access to the CMD (command line) running inside the container. Technically, the "**it**" switch puts you inside a running container.
-   
-    ![](content/image7.png)
+4. Run the command 
 
-5. Run the command `hostname`. This time you are running it inside the running container. Notice that the host name is different from the host name you get in step 5. The host name you see inside the container is the host name of the container itself. It is based on the container ID. You may want to run other commands as you wish or checkout the filesystem that is independent from the host's filesystem. 
+    ```poweshell 
+    docker run -it mcr.microsoft.com/windows/servercore:2004 powershell
+    ```
+
+    Please be patient as it will take a minute or so for contianer to start. The **-it** switch provides you with an interactive session. The **PowerShell** is a parameter passed as an argument tells docker to launch PowerShell as your shell running inside the container. 
    
-    ![](content/image8.png)
+    ![image7](content/image7.png)
+
+5. Run the command `hostname`. This time you are running it inside the running container. Notice that the host name is different from the host name you get in step 5. The host name you see inside the container is the host name of the container itself. It is based on the container ID. You may want to run other commands as you wish or checkout the filesystem that is independent from the host's filesystem.
+   
+    ![image8](content/image8.png)
 
 6. Finally, exit the interactive session by typing `exit` and pressing **Enter**. This will take you back to the PowerShell console on the host.  
    
-    ![](content/image9.png)
 
-7. Now let's run another container based on **Nano Server** image ( **mcr.microsoft.com/windows/nanoserver**). To do that run the command `docker run -it mcr.microsoft.com/windows/nanoserver:1809 CMD` 
-   
-   > Note:It might take a few seconds to load. This time we are starting a Windows Command prompt instead of Powershell inside of the container)  
-   
-   ![](content/image10.png)  
+7. Now let's run another container based on **Nano Server** image ( **mcr.microsoft.com/windows/nanoserver**). To do that run the command 
 
-8. Run the command `hostname`. Notice that the host name is different from host name you get in the previous steps. Again, the host name you see inside the container is the host name of the container itself, which is based on the container id. You can run other commands as you wish.  
+    ```powershell
+    docker run -it mcr.microsoft.com/windows/nanoserver:2004 CMD
+    ``` 
+   
+   > The container might take a few seconds to start. This time we are starting a Windows Command prompt instead of Powershell inside of the container)  
+   
+   ![image10](content/image10.png)  
+
+8. Run the command ```hostname```. Notice that the host name is different from host name you get in the previous steps. Again, the host name you see inside the container is the host name of the container itself, which is based on the container id. You can run other commands as you wish.  
    
    ![](content/image11.png)
 
 9. Finally, exit the interactive session by typing `exit` and pressing **Enter**. This will take you back to the PowerShell console on the host.  
 
-### Congratulations!
+### Summary
 
-In this exercise, you have created and run containers based on the Windows Server Core & Nano Server container images that Microsoft provides and maintains. You have successfully completed this exercise. Click **Next** to advance to the next exercise.
+In this exercise, you have created and run containers based on the Windows Server Core & Nano Server container images that Microsoft provides and maintains. You have successfully completed this exercise.
 
 # Exercise 2: Building and Running an IIS Server Windows Container Image
 
 In the exercise you will learn how to install IIS Web Server (Web Server Role) on a Windows Server Core base core image. IIS Server is a popular Web Server released by Microsoft. Considering the strong footprint of IIS within enterprises, Microsoft supports IIS on Windows Server Core.
 
-[Return to list of exercises](#module-2-table-of-contents) - [Return to list of modules](#modules)  
+## Build and run an IIS Server Image
 
-# Build and run an IIS Server Image
+1. Make sure you have a PowerShell Console open as an administrator (if you have followed previous task you should already be running a Console). Also, change the current directory to "**iis**" by running the command 
 
-1. Make sure you have a PowerShell Console open as an administrator (if you have followed previous task you should already be running a Console). Also, change the current directory to "**iis**" by running the command `cd c:\labs\module2\iis\ `
+    ```poweshell
+    cd labs\module2\iis\
+    ```
    
-    ![](content/image12.png)
-
 2. The iis folder contains the Dockerfile with instructions to install IIS Server (Web Server Role) on the Windows Server Core base image. Display the Dockerfile by running the command `cat .\Dockerfile`
    
     ![](content/image13.png)
@@ -311,3 +320,4 @@ In this exercise, you will package a simple ASP.NET Core MVC application into a 
 ### Congratulations!
 
 You have successfully completed this lab. Click **Next** to advance to the next lab.
+

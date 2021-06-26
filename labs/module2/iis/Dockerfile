@@ -5,6 +5,8 @@ LABEL owner="cloudarchitectureteam@contoso.com"
 #Install IIS
 RUN powershell -Command Add-WindowsFeature Web-Server
 
+COPY index.html /inetpub/wwwroot/
+
 ADD ServiceMonitor.exe /ServiceMonitor.exe
 
 EXPOSE 80
