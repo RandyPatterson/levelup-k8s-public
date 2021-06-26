@@ -15,8 +15,6 @@
 
 [Exercise 5: Tagging](#exercise-5-tagging)  
 
-[Exercise 6: Building and running SQL Server 2017 in a container](#exercise-6-building-and-running-sql-server-2017-in-a-container)  
-
 ### Prerequisites 
 
 * WSL 2 Ubuntu 18.04 
@@ -102,11 +100,6 @@ b6445949e796   tutum/wordpress   "/run.sh"   6 seconds ago    Up 5 seconds    33
 >Notice that you now have three WordPress blog instances running inside separate containers launched within few seconds. Contrast this to instead creating and running WordPress on virtual machine, which could take significantly more time.
 
 ![image12](./content/media/image12.png)
-
-
-### Congratulations!
-
-You have successfully completed this exercise.
 
 ---
 
@@ -213,10 +206,6 @@ In this exercise, you will learn about common Docker commands needed to work wit
 
     ![](content/modimage24_1.PNG)
 
-### Congratulations!
-
-You have successfully completed this exercise. Click **Next** to advance to the next exercise.
-
 ---
 
 # Exercise 3: Building Custom Container Images with Dockerfile
@@ -302,22 +291,22 @@ Run the command
 
     ![](content/mod1image39_2.PNG)
 1. Finally, create and run a new container based on "**mynginx**" image. Run command 
-```bash 
-docker run -d --name mynginx -p 8080:80 mynginx
-```
+    ```bash 
+    docker run -d --name mynginx -p 8080:80 mynginx
+    ```
 
-![](content/media/image40.png)
+    ![](content/media/image40.png)
 
 1. To test the node app, go to your browser and navigate to  [localhost:8080](http://localhost:8080)
 
-![m1e3i41](content/m1e3i41.png)
+    ![m1e3i41](content/m1e3i41.png)
 
 
-# Building and Running ASP.NET Core 3.x Application Inside A Container
+## Building and Running ASP.NET Core 3.x Application Inside A Container
 
-1. In this task you will build ASP .NET Core 3.x application and then package and run it as a container. Change to the relevant directory **labs/module1/aspnetcore**. First, we need to run **dotnet build**, and **publish** to generate the binaries for our application. This can be done manually or by leveraging a **Dockerfile**. In this example, we will run the commands manually to produce the artifacts in a folder called **published**. The **Dockerfile** will only contain instructions to copy the files from the **published** folder into the image.  
+In this task you will build ASP .NET Core 3.x application and then package and run it as a container. Change to the relevant directory **labs/module1/aspnetcore**. First, we need to run **dotnet build**, and **publish** to generate the binaries for our application. This can be done manually or by leveraging a **Dockerfile**. In this example, we will run the commands manually to produce the artifacts in a folder called **published**. The **Dockerfile** will only contain instructions to copy the files from the **published** folder into the image.  
      
-## Install .NET Core 3.1
+### Install .NET Core 3.1
 If Needed, install .NET Core 3.1 on your Ubuntu 18.04 linux shell using the following commands 
 
 In your Linux terminal run the following commands 
@@ -345,7 +334,7 @@ rpatterson@levelup:~$  dotnet --version
 3.1.410
 ```
 
-## Create ASP.NET Core Image
+### Create ASP.NET Core Image
 Now that .NET Core 3.1 SKD is installed we can create the image & cotnainer.
 
 Change to the correct directory and start the build process
@@ -361,32 +350,32 @@ dotnet build
 ![](content/mod1image43_2.PNG)
 
 1. Now that the application is ready, you will create your container image. The Dockerfile is provided to you. View the content of Dockerfile by running the following command
-```
-code Dockerfile
-```
-![](content/mod1image44_2.PNG) 
+    ```
+    code Dockerfile
+    ```
+    ![](content/mod1image44_2.PNG) 
 
 1. To create the container image run the command   
-```
-docker build -t myaspcoreapp:3.1 .
-```
+    ```
+    docker build -t myaspcoreapp:3.1 .
+    ```
 
->Notice the **3.1** tag representing the dotnet core framework version.  
-    
-![](content/mod1image45_2.PNG)
+    >Notice the **3.1** tag representing the dotnet core framework version.  
+        
+    ![](content/mod1image45_2.PNG)
 
 1. Launch the container running your application using the command  
-```docker run -d --name myaspcoreapp -p 8090:80 myaspcoreapp:3.1  ```
+    ```docker run -d --name myaspcoreapp -p 8090:80 myaspcoreapp:3.1  ```
 
-![](content/mod1image46_2.PNG)
+    ![](content/mod1image46_2.PNG)
 
->You are now running ASP.NET Core application inside the container listening at port 80 which is mapped to port 8090 on the host.
+    >You are now running ASP.NET Core application inside the container listening at port 80 which is mapped to port 8090 on the host.
 
 1. To test the application, open your browser and navigate to [localhost:8090](http://localhost:8090).  
 
-![](content/mod1image47_2.PNG)
+    ![](content/mod1image47_2.PNG)
 
-Notice that the container ID listed on the web page is identical to the container ID assigned by Docker
+    Notice that the container ID listed on the web page is identical to the container ID assigned by Docker
 
 --- 
 
@@ -469,7 +458,7 @@ In the previous exercise, you were able to build and run containers based on Doc
     ![m1ex4i52](content/m1ex4i52.png)
 
 
-    ### Test the new image run a command  
+### Test the new image run a command  
     ```bash
     docker run -d -p 8081:80 mynginxv2
     ```
