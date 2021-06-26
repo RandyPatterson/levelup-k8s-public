@@ -109,7 +109,6 @@ In this exercise, you will learn about common Docker commands needed to work wit
 
 
 ## Stopping Single Container
-[Return to list of exercises](#module-1-table-of-contents) - [Return to list of modules](#modules)  
 
 1. First list all the containers currently running by executing "**docker ps**" command. You should see list of all running containers. 
 
