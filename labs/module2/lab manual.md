@@ -1,6 +1,6 @@
 # Module 2 - Getting Started with Windows Containers
 
-> Duration: 60 minutes     
+> Duration: 45 minutes     
 
 # Module 2: Table of Contents
 
@@ -26,7 +26,7 @@
 
 First, after the [Prerequisites](#Prerequisites) have been installed, start PowerShell using the Windows Terminal
 
-![m2e1i1](./content/m2e1i1.png)
+![m2e1i1](./Content/m2e1i1.png)
 
 ### Next, download the lab files from GitHub
 
@@ -40,7 +40,7 @@ Navigate to the the newly created *labs* directory
  cd levelup-k8s-public/labs/; dir
 ```
 
-![m2e1i2](./content/m2e1i2.png)
+![m2e1i2](./Content/m2e1i2.png)
 
 ### Finally, verify Docker is running for Windows Containers
 
@@ -54,7 +54,7 @@ Enable-WindowsOptionalFeature -Online -FeatureName $("Microsoft-Hyper-V", "Conta
 
 Right click on the Docker icon in the taskbar and swith to Windows Contianers if available. If it says "Switch to Linux Containers" then Docker is already setup for Windows Cotnainers.
 
-![m2e1i3](./content/m2e1i3.png)
+![m2e1i3](./Content/m2e1i3.png)
 
 # Exercise 1: Working with Nano Server & Windows Server Core containers
 
@@ -103,7 +103,7 @@ Since Windows Server 2016, Microsoft offers both Nano Server and Server Core in 
 
 You will need to run the commands in this section using the PowerShell console as an administrator. Launch PowerShell using the Windows Terminal
 
-![m2e1i1](content/m2e1i1.png)
+![m2e1i1](Content/m2e1i1.png)
 
 Navigate to the **module2** directory
 
@@ -113,7 +113,7 @@ cd module2
 
 1. The PowerShell console is now available to you. Make sure you are inside of the **module2** labs directory. 
    
-    ![image4](content/image4.png)
+    ![image4](Content/image4.png)
 
 2. First, let's get the list of all the container images available on this Docker host by running the command 
    
@@ -135,7 +135,7 @@ cd module2
    
    > Knowledge: It's important to understand that you can always download specific version of **windows/servercore** and **windows/nanoserver** images by using an appropriate tag. For example, `docker pull mcr.microsoft.com/windows/servercore:10.0.17763.437` will pull the server core image that has a version number 10.0.17763.437. Notice the [mcr.microsoft.com](https://azure.microsoft.com/en-us/blog/microsoft-syndicates-container-catalog/) registry that is the container registry hosted on Microsoft servers, even though the images are discoverable on Docker Hub. All the concepts you learned about docker (Linux) containers and images generally apply as-is to windows containers too. The main deference is the fact that windows containers require the windows operating system as a host, while the Linux containers require Linux operating system.  
    
-    ![](content/image5_2.PNG)
+    ![](Content/image5_2.PNG)
 
 3. You will now run a container based on **Server Core** image (**mcr.microsoft.com/windows/servercore**). Before you do that, run the command `hostname`. This will reveal the hostname of your laptop. 
    
@@ -154,11 +154,11 @@ cd module2
 
     Please be patient as it will take a minute or so for contianer to start. The **-it** switch provides you with an interactive session. The **PowerShell** is a parameter passed as an argument tells docker to launch PowerShell as your shell running inside the container. 
    
-    ![image7](content/image7.png)
+    ![image7](Content/image7.png)
 
 5. Run the command `hostname`. This time you are running it inside the running container. Notice that the host name is different from the host name you get in step 5. The host name you see inside the container is the host name of the container itself. It is based on the container ID. You may want to run other commands as you wish or checkout the filesystem that is independent from the host's filesystem.
    
-    ![image8](content/image8.png)
+    ![image8](Content/image8.png)
 
 6. Finally, exit the interactive session by typing `exit` and pressing **Enter**. This will take you back to the PowerShell console on the host.  
    
@@ -171,11 +171,11 @@ cd module2
    
    > The container might take a few seconds to start. This time we are starting a Windows Command prompt instead of Powershell inside of the container)  
    
-   ![image10](content/image10.png)  
+   ![image10](Content/image10.png)  
 
 8. Run the command ```hostname```. Notice that the host name is different from host name you get in the previous steps. Again, the host name you see inside the container is the host name of the container itself, which is based on the container id. You can run other commands as you wish.  
    
-   ![](content/image11.png)
+   ![](Content/image11.png)
 
 9. Finally, exit the interactive session by typing `exit` and pressing **Enter**. This will take you back to the PowerShell console on the host.  
 
@@ -201,7 +201,7 @@ In the exercise you will learn how to install IIS Web Server (Web Server Role) o
     code Dockerfile
     ```
    
-    ![](content/image13.png)
+    ![](Content/image13.png)
    
    - The **FROM** instruction points to the **mcr.microsoft.com/windows/servercore** to be used as a base image for the new container image
    - The **RUN** instruction executes PowerShell to install Windows Feature "Web Server" (IIS Server)
@@ -220,7 +220,7 @@ In the exercise you will learn how to install IIS Web Server (Web Server Role) o
    
    > Note: **STEP 5** of the build process performs the installation of the Web-Server (IIS Server) and may take few minutes. Eventually you should see the results as follow. 
    
-    ![image15](content/image15.png)
+    ![image15](Content/image15.png)
 
 1. Run a new container based on **myiis:v1** image by using the command
     ```powershell
@@ -242,7 +242,7 @@ In the exercise you will learn how to install IIS Web Server (Web Server Role) o
    start http://localhost:8099
    ```
 
-    ![image18](content/image18.png)  
+    ![image18](Content/image18.png)  
    
 
 ### Summary
@@ -277,7 +277,7 @@ In this exercise, you will package a simple ASP.NET Core MVC application into a 
     
     The Dockerfile should look like the one below (note this is a multi-stage Dockerfile). 
    
-   ![](content/image54_2.PNG)
+   ![](Content/image54_2.PNG)
 
 3. To create the container image run the command 
 
@@ -301,11 +301,15 @@ In this exercise, you will package a simple ASP.NET Core MVC application into a 
     start http://localhost:9000
     ```
    
-    ![](content/image58_3.png)
+    ![](Content/image58_3.png)
 
-7. Run the following command to stop and remove all containers: `docker stop (docker ps -aq) ; docker rm (docker ps -aq)`.
+7. Run the following command to stop and remove all containers: 
+
+    ```powershell
+    docker stop (docker ps -aq) ; docker rm (docker ps -aq)
+    ```
 
 ### Congratulations!
 
-You have successfully completed this lab. Click **Next** to advance to the next lab.
+You have successfully completed this lab.
 
