@@ -3,7 +3,7 @@
 
 > Duration: 60 minutes
 
-# Module 1: Table of Contents  
+## Module 1: Table of Contents  
 
 [Exercise 1: Running Your First Container](#exercise-1-running-your-first-container)  
 
@@ -24,15 +24,15 @@
 
 >Use [this](https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers) tutorial for installation and setup instructions
 
+---
 
-
-# Exercise 1: Running Your First Container
+## Exercise 1: Running Your First Container
 
 In this exercise, you will launch a fully functional WordPress blog engine using a Linux-based Docker container. You will learn the commands needed to pull the container image and then launch the container using the Docker CLI. Finally, you will observe that by running the container, you don't need to install any of the WordPress dependencies onto your machine; the WordPress engine binaries and all dependencies will be packaged inside of the container.  
 
 
 
-## Running WordPress Blog Engine Container
+### Running WordPress Blog Engine Container
 1. to open a Linux terminal start **Windows Terminal** and choose **Ubuntu 18.04**.
 
 ![m1image1](./content/m1image1.png)
@@ -103,12 +103,12 @@ b6445949e796   tutum/wordpress   "/run.sh"   6 seconds ago    Up 5 seconds    33
 
 ---
 
-# Exercise 2: Working with the Docker Command Line Interface (CLI)
+## Exercise 2: Working with the Docker Command Line Interface (CLI)
 
 In this exercise, you will learn about common Docker commands needed to work with containers. A comprehensive list of docker commands are available at: [https://docs.docker.com/engine/reference/commandline/docker](https://docs.docker.com/engine/reference/commandline/docker)
 
 
-## Stopping Single Container
+### Stopping Single Container
 
 1. First list all the containers currently running by executing "**docker ps**" command. You should see list of all running containers. 
 
@@ -146,7 +146,7 @@ In this exercise, you will learn about common Docker commands needed to work wit
     ![](content/media/image17.png)
 
 
-## Restart a Container
+### Restart a Container
 
 1. In previous task you issued a Docker command to stop a running container. You can also issue command to start the container which was stopped. All you need is a container ID (same container ID you used earlier to stop a container in previous section), you can also get this using 'docker ps -a'.
 
@@ -162,7 +162,7 @@ In this exercise, you will learn about common Docker commands needed to work wit
     ![](content/media/image19.png)
 
 
-## Removing a Container
+### Removing a Container
 
 1. Stopping a container does not remove it and that's the reason why you were able to start it again in the previous task.
 
@@ -177,7 +177,7 @@ In this exercise, you will learn about common Docker commands needed to work wit
     >The "**-f**" switch is used to force the remove operation. It's needed if you are trying to remove a container that is running.
 
 
-## Stopping All Containers
+### Stopping All Containers
 
 1. At times you may want to stop all of the running containers and avoid issuing command to stop one container at a time. Run ```docker stop $(docker ps -aq)``` command to stop all running containers. Basically, you are issuing two commands: First the **docker ps** with relevant switches to capture the list of container IDs and then passing the list of IDs to the **docker stop** command.
 
@@ -185,7 +185,7 @@ In this exercise, you will learn about common Docker commands needed to work wit
     ![](content/media/image21.png)
 
 
-## Removing WordPress Container Image
+### Removing WordPress Container Image
 
 1. Removing a container image form a local system will let you reclaim its disk space. Please note that this operation is irreversible so proceed with caution. In this task you will remove the WordPress container image as you will not be using it any more. You must stop all containers using the image before you can delete the image, unless you use the force parameter.
 
@@ -207,12 +207,12 @@ In this exercise, you will learn about common Docker commands needed to work wit
 
 ---
 
-# Exercise 3: Building Custom Container Images with Dockerfile
+## Exercise 3: Building Custom Container Images with Dockerfile
 
 
 A Dockerfile is essentially a plain text file with Docker commands in it that are used to create a new image. You can think of it as a configuration file with a set of instructions needed to assemble a new image. In this exercise, you will learn the common commands that go into Dockerfiles by creating custom images based on common technologies like NGINX and ASP .NET Core.  
 
-## Setup 
+### Setup 
 First, after the [Prerequisites](#Prerequisites) have been installed, start the Ubuntu Linux distribution using Windows Terminal
 
 ![m1image1](./content/m1image1.png)
@@ -243,7 +243,7 @@ rpatterson@levelup:~/levelup-k8s-public$ ls
 ```
 
 
-## Building and Running NGINX Container
+### Building and Running NGINX Container
 
 1. In this task you will create a new image using the NGINX web server base image hosting a simple static html page. You will start with a Dockerfile with instructions to define its base image, then copy the static html file inside the image and then specify the startup command for the image (using CMD instruction). Later, you will learn how to build the image using Dockerfile and finally will run and test it out.
 
@@ -378,11 +378,11 @@ dotnet build
 
 --- 
 
-# Exercise 4: Interaction with a Running Container
+## Exercise 4: Interaction with a Running Container
 
 In the previous exercise, you were able to build and run containers based on Dockerfiles. However, there may be situations that warrant interacting with a running container for the purposes of troubleshooting, monitoring etc. You may also want to make changes/updates to a running container and then build a new image based on those changes. In this exercise, you will interact with a running container and then learn to persist your changes as a new image.  
 
-## Interaction with a Running Container
+### Interaction with a Running Container
 
 1. On the command line run ```docker ps -a ``` to list all the currently running containers on your virtual machine.
 
@@ -505,4 +505,5 @@ In this exercise you will learn the role of tagging in container and how to tag 
 
 
 
-# Congratulations you have successfully completed this module
+## Congratulations
+ you have successfully completed this module

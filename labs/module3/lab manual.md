@@ -1,11 +1,12 @@
 # Module 3: Table of Contents
 
+> Duration: 60 minutes     
+
 [Exercise 1: Working with Data Volumes](#exercise-1-working-with-data-volumes)  
 
 [Exercise 2: Working with Docker-Compose](#exercise-2-working-with-docker-compose)  
 
-[Exercise 3: Running Containers with Memory and CPU Constraints](#exercise-4-running-containers-with-memory-and-cpu-constraints)  
-
+[Exercise 3: Running Containers with Memory and CPU Constraints](#exercise-3-running-containers-with-memory-and-cpu-constraints)  
 
 ## Exercise 1: Working With Data Volumes
 
@@ -31,7 +32,11 @@ Volumes are initialized when a container is created. Some of the key characteris
 
     ![](content/media/image3.png)
 
-1. Navigate to your C:\\ drive: ```cd C:\```
+1. Navigate to your C:\\ drive: 
+
+    ```
+    cd C:\
+    ```
  
 1. Create a directory on the host operating system and then add a plain text file to it. Create a new directory on the C drive by running the command 
     ```
@@ -228,16 +233,17 @@ the location may be different.
 
     ![](content/media/image82.png)    
 
+---
 
-### Exercise 2: Working with Docker-Compose
+## Exercise 2: Working with Docker-Compose
 
-#### Challenges with Multi-Container Applications
+### Challenges with Multi-Container Applications
 
 When working with multi-containers applications, you will need to make sure that applications can discover each other in a seamless fashion. Consider a quite common scenario where a web application (that acts as a front-end) calls to a backend RESTful web API to fetch content. In this scenario, the web app would need to access the web API in a consistent fashion. In addition, due to the fact the web application has a dependency on the web API, that dependency must be expressed when launching the applications in containers. It is imperative that we are able to launch and test a multi-container application the same way across development, test and production environments.
 
 Docker has provided a tool called **"docker-compose"** that enables you to describe your applications as services within a YAML file, docker-compose.yml. A service in this context really means, "a container in production". A service only runs one image, but it codifies the way that image runs - what ports it should use, how many replicas of the container image should run (so that the service has the capacity it needs), and so on. Scaling a service increases the number of container instances running the application image, assigning more computing resources to that service in the process.
 
-#### Working with Docker-Compose
+### Working with Docker-Compose
 
 In this exercise, you will work with a simple "Famous Quotes" application that is composed of a frontend web app that talks to a RESTful API to fetch quotes in JSON format. Both the web app and API are developed using ASP.NET Core and each will run in a separate container. As this is a multi-container scenario, you will use a docker-compose file to:
 
@@ -250,13 +256,19 @@ In this exercise, you will work with a simple "Famous Quotes" application that i
 - Get both application components up and running in separate containers with a single command (i.e., without using individual docker-run commands for each container).
 
 
-## Exercise 2: Working with Docker-Compose
+1. Launch the **PowerShell Console** (if not already running) and change your current directory to "**compose**" folder by running the command 
 
-1. Launch the **PowerShell Console** (if not already running) and change your current directory to "**compose**" folder by running the command `cd C:\labs\module3\compose`
+    ```powershell
+    cd C:\labs\module3\compose
+    ```
 
     ![](content/media/image83.png)
 
-1. Before proceeding further let's stop all the running containers from previous task. Run the command `docker stop (docker ps -aq)`
+1. Before proceeding further let's stop all the running containers from previous task. Run the command 
+
+    ```powershell
+    docker stop (docker ps -aq)
+    ```
 
     ![](content/media/image84.png)
 
@@ -264,17 +276,25 @@ In this exercise, you will work with a simple "Famous Quotes" application that i
 
     ![](content/media/image85.png)
 
-1. Notice that you have two folders "**mywebapi**" and "**mywebapp**" representing the web API and web application, respectively. First, you will inspect the piece of code that is making the RESTful call to mywebapi. To do that run the command: `gc .\mywebapp\Controllers\HomeController.cs`
+1. Notice that you have two folders "**mywebapi**" and "**mywebapp**" representing the web API and web application, respectively. First, you will inspect the piece of code that is making the RESTful call to mywebapi. To do that run the command: 
+
+    ```powershell
+    gc .\mywebapp\Controllers\HomeController.cs
+    ```
 
     ![](content/media/image86.png)
 
 1. This displays the code within HomeController.cs file. You may need to scroll down to view the code that calls the mywebapi RESTful endpoint. The actual URI is [http://demowebapi:9000/api/quotes](http://demowebapi:9000/api/quotes). 
 
-    >Note:Notice the use of **demowebapi** which is not a FQDN nor IP Address, but rather a service that is defined within the **docker-compose.yml** file (which we will review next). By using the service name, the web application can simply refer to the Web API app (using that same name) across all environments, including development, test and production etc.
+    >Notice the use of **demowebapi** which is not a FQDN nor IP Address, but rather a service that is defined within the **docker-compose.yml** file (which we will review next). By using the service name, the web application can simply refer to the Web API app (using that same name) across all environments, including development, test and production etc.
 
     ![](content/media/image87.png)
 
-1. Let's inspect the **docker-compose.yml** file. Run the command `gc .\docker-compose.yml`
+1. Let's inspect the **docker-compose.yml** file. Run the command
+
+    ```powershell
+    gc .\docker-compose.yml
+    ```
 
     ![](content/media/image88.png)
 
@@ -286,21 +306,25 @@ In this exercise, you will work with a simple "Famous Quotes" application that i
     >
     >Finally, the networks section keeps the default settings to nat networking. This network declaration is needed for windows containers now. Basically, it tells docker compose to use default nat networking.
 
-# Docker Compose Up
+### Docker Compose Up
 
-1. We have pre-downloaded the docker-compose.exe file for you onto the VM, if you would like to see it, you can see the URL here: **https://github.com/docker/compose/releases/download/1.12.0/docker-compose-Windows-x86\_64.exe**  
+1. Docker Desktop installed the docker-compose.exe file for you onto the VM, if you would like to see it, you can see the URL here: **https://github.com/docker/compose/releases/download/1.12.0/docker-compose-Windows-x86\_64.exe**  
 
-1. At this point, you are all set to run the multi-container application with a single command `docker-compose.exe up -d`
+1. At this point, you are all set to run the multi-container application with a single command 
+
+    ```powershell
+    docker-compose.exe up -d
+    ```
 
     ![](content/media/image90.png)
 
-    >Knowledge: The docker-compose.exe tries to make it simple to start and stop the services (running containers) with commands like up and down. The **-d** switch works the same as when used with the docker build command, which instructs docker to run the container in the background rather than interactively. If you don't provide any switch parameter, the default is set to interactive.
+    >Knowledge:  The docker-compose.exe tries to make it simple to start and stop the services (running containers) with commands like up and down. The **-d** switch works the same as when used with the docker build command, which instructs docker to run the container in the background rather than interactively. If you don't provide any switch parameter, the default is set to interactive.
 
-    >Note:As the command executes, you will notice that the "mywebapi" container is built first. This is because we mention in the yml file that "mywebapp" depends on it, so it will build first. Also, if the image for "mywebapi" already exists, then it won't be built again.
+    >Note:  As the command executes, you will notice that the "mywebapi" container is built first. This is because we mention in the yml file that "mywebapp" depends on it, so it will build first. Also, if the image for "mywebapi" already exists, then it won't be built again.
 
     ![](content/mod3image35_2.PNG)
 
-    >Note:Next, Docker will build the container image for "mywebapp."
+    Next, Docker will build the container image for "mywebapp."
 
     ![](content/mod3image36_2.PNG)
 
@@ -314,167 +338,95 @@ In this exercise, you will work with a simple "Famous Quotes" application that i
 
     ![](content/image94_3.png)
 
-1. Open web browser of your choice and browse to localhost `start http://localhost`. You should land on the home page of web application as shown below.
+1. Open web browser of your choice and browse to localhost 
+
+    ```powershell
+    start http://localhost
+    ```
+    You should land on the home page of web application as shown below.
 
     ![](content/mod3image40_3.png)
 
-    >Note:To test the Web API you will can select the **Quotes** option from the top menu bar. This will result in a call to web API and results being displayed on the web application.
+    >To test the Web API you will can select the **Quotes** option from the top menu bar. This will result in a call to web API and results being displayed on the web application.
 
     ![](content/image97_2.PNG)
 
-# Docker Compose Down
+### Docker Compose Down
 
 When you wish to stop and remove the multi-container application that was launched by docker compose, you will use docker-compose down command. The down command safely stops and removes all the containers that were launched by the up command earlier using the docker-compose.yml file.
 
->Knowledge: If you only wish to stop the multi-container applications and associated running containers use "**docker-compose stop**" command instead. This command will stop the containers, but won't remove them.
+>**Knowledge**: If you only wish to stop the multi-container applications and associated running containers use "**docker-compose stop**" command instead. This command will stop the containers, but won't remove them.
+
+1. On the PowerShell console run the command 
+
+    ```powershell
+    docker-compose down
+    ```
+
+    First the containers are stopped and then they are removed. Finally, the docker compose network may be deleted.
+
+    ```
+    PS C:\labs\module3\compose> docker-compose down
+    Stopping compose_demowebapp_1 ... done
+    Stopping compose_demowebapi_1 ... done
+    Removing compose_demowebapp_1 ... done
+    Removing compose_demowebapi_1 ... done
+    Network nat is external, skipping
+    PS C:\labs\module3\compose>
+    ```
 
 
-[Return to list of exercises](#module-3-table-of-contents) - [Return to list of modules](#modules)  
-1. On the PowerShell console run the command `docker-compose down`
+---
 
-    >Note: First the containers are stopped and then they are removed.
-
-### Congratulations!
-
-You have successfully completed this exercise. Click **Next** to advance to the next exercise.
-
-
-
-# Exercise 3: Docker Networking
-
-In this exercise, you will work with various PowerShell and Docker CLI commands to view Docker default networks and create a custom nat network. Finally, you will remove the custom nat network and observe how Docker responds by creating a new default nat network automatically.
-
-
-[Return to list of exercises](#module-3-table-of-contents) - [Return to list of modules](#modules)  
-# Display all Docker networks
-
-You can retrieve container networks using the Docker CLI.
-
-1. Docker provides native docker command that provides list of networks available to docker. To view the list of networks available to docker run the command `docker network ls`.
-
-    ![](content/mod3image43.png)
-
-    >Knowledge: The 'nat' network is the default network for containers running on Windows. Any containers that are run on Windows without any flags or arguments to implement specific network configurations will be attached to the default 'nat' network, and automatically assigned an IP address from the 'nat' network's internal prefix IP range. The default nat network also supports port forwarding from container host to internal containers. For example, you can simply run SQL Server Express in a container by providing the "p" flag so that specified port numbers will be mapped from host to container.
-
-1. To view detail information about the Docker default nat network, run the command `docker inspect nat`
-
-    >Note:Notice the output is in JSON format. The "Containers" key (which is empty in this case) refers to all containers that are using the specified network. The containers key is empty in this case because there are no containers currently running.
-
-    ![](content/mod3image44.png)
-
-1. Run `ipconfig` to see the two networks: the physical network, localdomain, and the local container network, nat.
-
-    ![](content/mod3image44_localnetwork.png)
-
-1. Launch a new container by running a command `docker run -d mcr.microsoft.com/windows/nanoserver:1809 ping -t localhost**+++. Once the container is running execute the command +++**docker inspect nat`
-
-    >Note:Notice that this time the "Containers" section now includes information pertaining to the container that is using the nat network including its ID and IPv4 address.
-
-    ![](content/mod3image45.png)
-
-# Create a custom Docker nat network
-
-Docker allows you to create custom nat networks. In this task, you will create and configure a custom nat network replacing the default nat network.
-
-  
-[Return to list of exercises](#module-3-table-of-contents) - [Return to list of modules](#modules)  
-1. Create a new docker network by running the command `docker network create -d nat --subnet=192.168.15.0/24 --gateway=192.168.15.1 custom-nat`
-
-    >Note:The **"d"** flag stands for network driver and specifies the network type you want to create which in this case is "nat". You are also providing the IP prefix and gateway address using the -subnet and -gateway flags.
-
-1. Use the **+++docker network ls**+++ command and notice that "**custom-nat**" network is available.
-
-    ![](content/mod3image48.png)
-
-1. To use the new custom nat network for containers launch a new container by using the command `docker run -d --network=custom-nat mcr.microsoft.com/windows/nanoserver:1809 ping -t localhost`
-
-    >Note:Notice the use of --network switch which allows you to force docker to use specific network for the container.
-
-1. Now, use the **+++docker network inspect custom-nat**+++ command to get the detailed information about custom-nat network and container(s) that is using it.
-
-    >Note:Notice the subnet and gateway values reflect the values you used earlier during the creation of the network. Also note that the container's IPv4 Address, 192.168.15.224 (may be different in your case), is in the custom-nat network.
-
-    ![](content/mod3image49.png)
-
-1. To confirm that the container host and access container run the command `ping &lt;Container - IPv4 Address&gt;`
-    
-    >Note: You can look for container's IP Address in the output from previous command. Notice that the host can successfully access the container using its IP.
-
-    ![](content/mod3image50.png)
- 
-1. Now let's start a new container on the nat network and open a command prompt `docker run -it --network=nat mcr.microsoft.com/windows/nanoserver:1809 cmd`
-
-1. We can try to ping the previous container with `ping <Container - IPv4 Address>` where the IP Address is the same one we just pinged from the host.  Hit **Ctrl-C** to stop the ping operation.
-
-    ![](content/image50_pingFromContainer.png)
-
-    >Note: Because the two containers are on separated networks, they cannot ping each other using their IP Address.     
-
-1.  Run `ipconfig**+++ from the container to check the that IP Address belongs to the nat network. Then run +++**exit` to go back to the host.    
-  
-    ![](content/image50_containerIp.png)
-
-1. Remove all containers so that you can then remove the custom network you have created (if containers are still attached to the network, the network deletion will fail). `docker rm (docker ps -aq) -f`
-
-1.  You may now remove the **custom-nat** network `docker network rm custom-nat`
-
-    ![](content/image50_rmCustomNetwork.png)
-
-1.  Check that only nat network remains `docker network ls`  
-    
-    ![](content/mod3image51.png)
- 
-### Congratulations!
-
-You have successfully completed this exercise. Click **Next** to advance to the next exercise.
-
-
-
-# Exercise 4: Running containers with memory and CPU constraints
+## Exercise 3: Running containers with memory and CPU constraints
 
 By default, when a container is run, it has no resource constraints. Without constraints, a container can use as much of a given resource as the host's kernel scheduler will allow. Docker enables you to control how much memory, CPU, and/or block IO a container can consume by setting runtime configuration flags. In this exercise, you will run a container with resource constraints. To follow best practices, you should always establish resource constraints on your containers.
 
-
-[Return to list of exercises](#module-3-table-of-contents) - [Return to list of modules](#modules)  
-# Run a container with memory constraints  
+### Run a container with memory constraints  
 
 In this task, you will launch a container with a pre-defined memory limit, to ensure the container does not consume the host's memory beyond the memory limit. Later, you will test the container memory limit by simulating higher memory consumption inside the container.
 
 
-[Return to list of exercises](#module-3-table-of-contents) - [Return to list of modules](#modules)  
 1. Before running the container open two new **PowerShell** Consoles
-    >Note:You will use one of these consoles to run the docker container and interact with it. The other console will be leveraged to monitor the memory usage of the container.
+    >You will use one of these consoles to run the docker container and interact with it. The other console will be leveraged to monitor the memory usage of the container.
 
-1. Use one of the open **PowerShell** consoles to launch a new container with a memory limit of 500 megabytes (MB) by running the command `docker run -it -m 500M --mount 'type=bind,source=C:/labs/module3/tools/,target=C:/tools/' mcr.microsoft.com/windows/servercore:1809 powershell`
+1. Use one of the open **PowerShell** consoles to launch a new container with a memory limit of 500 megabytes (MB) by running the command 
 
-    >Note:Notice the use of -m (or --memory) switch within the run command. The switch specifies the maximum amount of memory the container can use. In this case, you are setting it to 500 M (where M = Megabytes). Other valid options are B = Bytes, K= Kilobytes and G = Gigabytes. These are also not case sensitive).
+    >IMPORTANT: If your lab files for module 3 are not located in the directory **C:/labs/module3/** then change the **source** (source=C:/labs/module3/tools/) directory in the comand below 
 
-    >Knowledge:The use of -m switch is not related to memory but rather to bind mounting the tools folder on from the host into the container. This folder containes a Sysinternals tool "[TestLimit64.exe](https://live.sysinternals.com/WindowsInternals/)" which you will be using next to test the container memory limit.
 
-1. You should now have access to **PowerShell** console that is running inside the container. Run the `hostname` command and note the name of the container. You will need it later in this task.
+    ```powershell
+    docker run -it -m 500M --mount 'type=bind,source=C:/labs/module3/tools/,target=C:/tools/' mcr.microsoft.com/windows/servercore:2004 powershell
+    ```
 
-    **Container ID**  
-    @lab.TextBox(ContainerID3)
+    >Notice the use of -m (or --memory) switch within the run command. The switch specifies the maximum amount of memory the container can use. In this case, you are setting it to 500 M (where M = Megabytes). Other valid options are B = Bytes, K= Kilobytes and G = Gigabytes. These are also not case sensitive).
 
-    ![](content/mod3image52.png)
+    >The use of -m switch is not related to memory but rather to bind mounting the tools folder on from the host into the container. This folder containes a Sysinternals tool "[TestLimit64.exe](https://live.sysinternals.com/WindowsInternals/)" which you will be using next to test the container memory limit.
 
-1. To test the memory limit of container you will use the **testlimit** tool. Run the following command `C:\tools\testlimit64.exe -d -c 1024`
+1. To test the memory limit of container you will use the **testlimit** tool. Run the following command 
+
+    ```powershell
+    C:\tools\testlimit64.exe -d -c 1024
+    ```
 
     ![](content/mod3image53.png)
 
-    >Note:The tool will attempt to push the memory consumption of the container to 1024 MB (1 GB). However,because the container can't go beyond 500 MB, the value of memory consumed will always be under 500 MB (the exact value of how much memory is used will vary but won't go beyond the maximum available memory on container which is 500 MB)
+    >The **TestLimit64** tool will attempt to push the memory consumption of the container to 1024 MB (1 GB). However,because the container can't go beyond 500 MB, the value of memory consumed will always be under 500 MB (the exact value of how much memory is used will vary but won't go beyond the maximum available memory on container which is 500 MB)
 
-1. Go back to the **PowerShell** console on the host (this is the second console that you opened earlier). Run the docker stats command `docker stats <ContainerID3>`
+1. Go back to the **PowerShell** console on the host (this is the second console that you opened earlier). Run the docker stats command 
 
-    >Note: This command gives you a live stream of various vital stats including memory, CPU, etc. directly from the container.
+    ```powershell
+    docker stats
+    ```
+
+    >**Note**: This command gives you a live stream of various vital stats including memory, CPU, etc. directly from the container.
 
 1. Notice the value under the column "**PRIV WORKING SET**". This represents the memory usage by the container; this is the value that docker has constrained to 500 MB.
 
     ![](content/mod3image54.png)
 
 1. Now, you will reclaim the memory occupied by the running tool. Go back to the **PowerShell** console that was used to run the container and press the key combination "**Ctrl+C**". 
-    >Note:This will stop the tool and free the memory on the container used by this tool.
-
+   
 1. Go back on the **PowerShell** console on the host that is displaying the vital stats for the container. 
     >Note:Notice that memory usage has dropped significantly.
 
@@ -485,47 +437,58 @@ In this task, you will launch a container with a pre-defined memory limit, to en
 1. In the other **Powershell** window, type `exit` to exit the running container
 
 
-# Run a container with a CPU usage limit
+### Run a container with a CPU usage limit
 
 In addition to setting a memory constaint, you can also constrain the CPU usage by the container. By default,Docker does not apply any constraint on container CPU usage, which essentially means the container is free to utilize host CPU up to 100%. In this task, you will put a limit on CPU utilization by the container.
 
+1. Since modern machines have CPUs with multiple cores you will first determine the number of cores available to the host virtual machine by running the command 
 
-[Return to list of exercises](#module-3-table-of-contents) - [Return to list of modules](#modules)  
+    ```powershell 
+    Get-WmiObject –class Win32_processor | Select -ExpandProperty NumberOfCores
+    ```
 
-1. Since modern machines have CPUs with multiple cores you will first determine the number of cores available to the host virtual machine by running the command `Get-WmiObject –class Win32_processor | Select -ExpandProperty NumberOfCores`
-
-    >Note:Take note of the number of cores available. In this case there are 2 cores, but the value you see may differ.
+    >Take note of the number of cores available. In this case there are 2 cores, but the value you see may differ.
     
     ![](content/mod3image56.png)
 
-1. You will now launch a new container and limit its host CPU utilization to ~25%. Make sure that you set half of the availble CPU here. If your machine just has 4 cores, set the value to 1. 
+1. You will now launch a new container and limit its host CPU utilization to ~25%. Make sure that you set half of the availble CPU here. If your machine just has 2 cores, set the value to 0.5 
 
-    `docker run -it --cpus 1.0 --mount 'type=bind,source=C:/labs/module3/tools/,target=C:/tools/' mcr.microsoft.com/windows/servercore:1809 powershell`
+    >**IMPORTANT**: If your lab files for module 3 are not located in the directory **C:/labs/module3/** then change the **source** (source=C:/labs/module3/tools/) directory in the comand below 
 
-    >Note:Notice the use of --cpus switch which will specify how much of the available CPU resources the container can use. For example, the host machine has two CPUs and if you set --cpus to 1.0, the container will be able to access, **at most**, one of the CPUs on the host.
+    ```powersehll 
+    docker run -it --cpus .5 --mount 'type=bind,source=C:/labs/module3/tools/,target=C:/tools/' mcr.microsoft.com/windows/servercore:2004 powershell
+    ```
+
+    >**Note**:  Notice the use of --cpus switch which will specify how much of the available CPU resources the container can use. For example, the host machine has two CPUs and if you set --cpus to 1.0, the container will be able to access, **at most**, one of the CPUs on the host.
 
 
-1. You should now have access to PowerShell console that is running inside of the container. Run the `hostname` command and take note of the container name. You will need it later in this task. 
+1. Go back to the **PowerShell** console on the host (this is the second console that you opened earlier). Run the docker stats command 
 
-    **Container hostname**
-    @lab.TextBox(ContainerID4)
-
-1. Go back to the **PowerShell** console on the host (this is the second console that you opened earlier). Run the docker stats command `docker stats <ContainerID4>`
+    ```powershell
+    docker stats 
+    ```
 
     ![](content/mod3image57.png)
 
-1. Go back to the **PowerShell** console in the container and make sure that you are authorized to run PS1 scripts by running the following command `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`
+1. Go back to the **PowerShell** console in the container and make sure that you are authorized to run PS1 scripts by running the following command 
 
-1. You will now test the CPU constraint of ~25% by stress testing the CPU utilization on the container. Switch back to the **PowerShell** console that you used earlier to launch the container with a CPU usage limit. Execute the command `C:\tools\cpu-stress.ps1`
+    ```powershell
+    Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+    ```
+
+1. You will now test the CPU constraint of ~25% by stress testing the CPU utilization on the container. Switch back to the **PowerShell** console that you used earlier to launch the container with a CPU usage limit. Execute the command 
+
+    ```powershell
+    C:\tools\cpu-stress.ps1
+    ```
 
     ![](content/mod3image58.png)
 
-    >Note:This command executes the script on the container which stress tests CPU, targeting all cores available to the container. However, because you set a constraint on CPU utilization, the container will never able to consume more than 1 CPU.To validate the CPU usage, go back to PowerShell console displaying **docker stats**. Notice the container CPU utilization is ~25% and not 100%. The CPU utilization may be slightly lower or higher than 25%, so it may not be exact. 
+    >**Note**:   This command executes the script on the container which stress tests CPU, targeting all cores available to the container. However, because you set a constraint on CPU utilization, the container will never able to consume more than .5 CPU (or the value you changed it too).To validate the CPU usage, go back to PowerShell console displaying **docker stats**. Notice the container CPU utilization is ~25% and not 100%. The CPU utilization may be slightly lower or higher than 25%, so it may not be exact. 
 
     ![](content/mod3image59.png)
 
 ### Congratulations!
 
-You have successfully completed this lab. Click **Next** to advance to the next lab.
-
+You have successfully completed this lab. 
 

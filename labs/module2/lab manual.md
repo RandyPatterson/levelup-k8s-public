@@ -2,15 +2,13 @@
 
 > Duration: 45 minutes     
 
-# Module 2: Table of Contents
+## Module 2: Table of Contents
 
 [Exercise 1: Working with Nano Server & Windows Server Core Containers](#exercise-1-working-with-nano-server--windows-server-core-containers)
 
 [Exercise 2: Building and Running an IIS Server Windows Container Image](#exercise-2-building-and-running-an-iis-server-windows-container-image)
 
 [Exercise 3: Building an ASP.NET Core Application](#exercise-3-building-an-aspnet-core-application)  
-
-### Prerequisites
 
 ### Prerequisites
 
@@ -56,11 +54,11 @@ Right click on the Docker icon in the taskbar and swith to Windows Contianers if
 
 ![m2e1i3](./Content/m2e1i3.png)
 
-# Exercise 1: Working with Nano Server & Windows Server Core containers
+## Exercise 1: Working with Nano Server & Windows Server Core containers
 
 In this exercise, you will learn about the Windows Nano Server and Server Core images. Please read below for an overview of each image. Then you will complete the steps to build and run these containers.
 
-## Windows Server Core Overview
+### Windows Server Core Overview
 
 Microsoft starting with Windows Server 2016 has an option of Server Core installation. The Server Core option reduces the amount of space required on disk, the potential attack surface, and especially the servicing requirements. It is recommended that you choose the Server Core installation unless you have a need for the additional user interface elements and graphical management tools that are included in the Server with Desktop Experience option. For an even more lightweight option, see the next section on Nano Server. Server Core allows you to install various Server roles that may not be available in Nano Server including those listed below:
 
@@ -84,7 +82,7 @@ Microsoft starting with Windows Server 2016 has an option of Server Core install
 
 For a comprehensive list of features available in Server Core, visit [https://technet.microsoft.com/en-us/windows-server-docs/get-started/getting-started-with-server-core](https://technet.microsoft.com/en-us/windows-server-docs/get-started/getting-started-with-server-core).
 
-## Windows Nano Server Overview
+### Windows Nano Server Overview
 
 Nano Server is optimized as a lightweight operating system for running "cloud-native" applications based on containers and micro-services. There are important differences in Nano Server versus Server Core. As of Windows Server 2016, version 1803, Nano Server is available only as a container base OS image. You must run it as a container in a container host, such as a Server Core installation of Windows Server. Running a container based on Nano Server in this release differs from releases prior to 1803 in the ways listed below:
 
@@ -183,11 +181,13 @@ cd module2
 
 In this exercise, you have created and run containers based on the Windows Server Core & Nano Server container images that Microsoft provides and maintains. You have successfully completed this exercise.
 
-# Exercise 2: Building and Running an IIS Server Windows Container Image
+---
+
+## Exercise 2: Building and Running an IIS Server Windows Container Image
 
 In the exercise you will learn how to install IIS Web Server (Web Server Role) on a Windows Server Core base core image. IIS Server is a popular Web Server released by Microsoft. Considering the strong footprint of IIS within enterprises, Microsoft supports IIS on Windows Server Core.
 
-## Build and run an IIS Server Image
+### Build and run an IIS Server Image
 
 1. Make sure you have a PowerShell Console open as an administrator (if you have followed previous task you should already be running a Console). Also, change the current directory to "**iis**" by running the command 
 
@@ -250,7 +250,9 @@ In the exercise you will learn how to install IIS Web Server (Web Server Role) o
 This concludes the exercise on creating a new image with IIS server. If you are looking to leverage IIS server beyond this lab, then you
 may want to use Microsoft official IIS server image (**mcr.microsoft.com/windows/servercore/iis**) which is available at (<https://hub.docker.com/r/microsoft/iis/)>. The underlying process is pretty much same but the main benefit of using the official IIS image is that Microsoft releases updated images on a regular basis including patches and fixes.
 
-# Exercise 3: Building an ASP.NET Core application
+---
+
+## Exercise 3: Building an ASP.NET Core application
 
 In the previous task, you built container images using some of the more mature technologies and products released by Microsoft. In this task,
 you will build container that will run ASP.NET Core Web Application. If you completed the Module 1 lab, this will be very similar. However, we will now build the ASP.Net Core application on Windows instead of Linux. Furthermore, we will use the multi-stage build process rather than building the application manually with **dotnet** CLI.  
@@ -262,7 +264,7 @@ ASP.NET sits on top of .NET Core, so it also offers cross-platform support.
 
 In this exercise, you will package a simple ASP.NET Core MVC application into a container image using a Dockerfile. Finally, you will run container hosting the ASP.NET Core application using the **docker run** command.    
 
-## Building and Running ASP.NET Core 3.x Application Inside Container
+### Building and Running ASP.NET Core 3.x Application Inside Container
 
 1. Change to the relevant directory using the following command: 
     ```powershell
