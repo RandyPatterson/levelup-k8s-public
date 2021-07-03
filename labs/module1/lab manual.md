@@ -168,7 +168,11 @@ In this exercise, you will learn about common Docker commands needed to work wit
 
     To delete/remove a container and free the resources you need to issue a different command. Please note that this command does not remove the underlying image but rather the specific container that was based on the image. To remove the image and reclaim its resources, like disk space, you'll will need to issue a different command which is covered under the later section "Removing Container Image".
 
-1. To remove a container, ```run docker rm -f <CONTAINER_ID>``` command. 
+1. Remove a container
+    
+    ```powershell 
+    docker rm -f <CONTAINER_ID>
+    ```
 
     This uses the container identifier you used in previous section. If you don't have it handy, simply run "docker ps" and copy the container ID from the listing.
 
@@ -179,7 +183,13 @@ In this exercise, you will learn about common Docker commands needed to work wit
 
 ### Stopping All Containers
 
-1. At times you may want to stop all of the running containers and avoid issuing command to stop one container at a time. Run ```docker stop $(docker ps -aq)``` command to stop all running containers. Basically, you are issuing two commands: First the **docker ps** with relevant switches to capture the list of container IDs and then passing the list of IDs to the **docker stop** command.
+1. At times you may want to stop all of the running containers and avoid issuing command to stop one container at a time.
+
+    ```powershell
+    docker stop $(docker ps -aq)
+    ``` 
+    
+    this command will stop all running containers. Basically, you are issuing two commands: First the **docker ps** with relevant switches to capture the list of container IDs and then passing the list of IDs to the **docker stop** command.
 
     
     ![](content/media/image21.png)

@@ -22,9 +22,7 @@ Volumes are initialized when a container is created. Some of the key characteris
   
   - Data volumes persist even if the container itself is deleted.  
 
->Knowledge:Docker never automatically deletes volumes when you remove a container nor will it "garbage collect" volumes that are no longer referenced by a container. This means you are responsible for cleaning up volumes yourself.
-
-
+>Docker never automatically deletes volumes when you remove a container nor will it "garbage collect" volumes that are no longer referenced by a container. This means you are responsible for cleaning up volumes yourself.
 
 ### Mount a host directory as a data volume
 
@@ -105,11 +103,10 @@ Volumes are initialized when a container is created. Some of the key characteris
 1. On the host PowerShell Console run the command 
 
     ```powershell
-    gc C:\MyData\file.txt
+    type C:\MyData\file.txt
     ```
-    > **gc** stands for **Get-Content**.
    
-    >Notice that changes made from the container persist on the host by the **file.txt**.
+    >**Notice** that changes made from the container persist on the host by the **file.txt**.
 
     ![](content/media/image71.png)
 
