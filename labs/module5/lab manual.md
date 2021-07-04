@@ -502,12 +502,13 @@ Now, check the of newly created service:
   ```powershell
   kubectl get svc -o wide
   ```  
+  ![m5img20](content/m5img20.png)
 
 The above command will display the details of all available services along with the label selectors. You should see in the output, **ng-svc** with **PORTS 80:30101/TCP** and **SELECTOR target=dev**.  
 
 **2.  Accessing the ng-svc Service**  
 
-Open a browser and navigate to that IP address.  
+Open a browser and navigate to that **EXTERNAL-IP** address.  
 
 **3.  Deleting Deployment and Service**  
 
