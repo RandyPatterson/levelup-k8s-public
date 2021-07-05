@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: ng-dep
 spec:
+  selector:
+    matchLabels:
+      target: dev
   replicas: 5
   template:
     metadata:
