@@ -1,4 +1,4 @@
-# Module 3: Table of Contents
+# Module 3: Docker Advanced Topics
 
 > Duration: 60 minutes     
 
