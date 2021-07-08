@@ -90,7 +90,7 @@ Run the following command to deploy Kubernetes cluster with AKS
 (replace **INITIALS** with your initials).  
   ```powershell
   rg="aks-cluster-$RANDOM"
-  az create rg $rg
+  az group create -n $rg -l eastus
   ```
   Output
   ```
