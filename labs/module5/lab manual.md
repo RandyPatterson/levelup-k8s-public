@@ -116,6 +116,12 @@ Run the following command to deploy Kubernetes cluster with AKS
 >**NOTE**:  It will take approximately 10 minutes for the cluster to provision
 successfully in the US. 
 
+If needed, install `kubectl` locally 
+```bash
+az aks install-cli
+```
+
+
 Run the following command to download the AKS Kubernetes cluster configuration to the local config file: **~/.kube/config**  
 
   ```powershell
