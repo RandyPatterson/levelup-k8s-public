@@ -473,13 +473,6 @@ Open the browser and navigate to http://localhost:8001
 
 Make sure to stop the port forwarding before proceeding further. You can use **Windows-C** or **Command-C** key combination to terminate it.   
 
-**4.  Deleting the deployment**   
-Finally, remove the deployment with the following command  
-
-  ```powershell
-  kubectl delete deployment ng-dep
-  ```   
-
 ## Exercise: Working with Services  
 
 In this Exercise you will create a simple Service. Until now, you have been using the **port-forward** command to gain access to the Pods. Although, this works fine during dev/test, this approach does not really scale. Services help you expose Pods externally using label selectors.  
