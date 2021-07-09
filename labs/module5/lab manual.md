@@ -86,8 +86,8 @@ quotes.
 
 **2.  Creating the AKS cluster**  
 
-Run the following command to deploy Kubernetes cluster with AKS
-(replace **INITIALS** with your initials).  
+Run the following commands to create a resource group for your Kubernetes Cluster
+ 
   ```powershell
   rg="aks-cluster-$RANDOM"
   az group create -n $rg -l eastus
